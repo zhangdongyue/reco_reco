@@ -1,0 +1,2760 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://www.atatech.org/articles/89102 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>Structure2Vec: 一种强大的异构网络深度学习和推理的分布式技术平台</title>
+  <meta name="description" content="">
+  
+  <meta name="viewport" content="width=1100, maximum-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" href="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/app-b704f221e6baf4d80ae8febe8a470ad8952e11d0.css">
+  <script src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/app-63f69630beb8fb78f075a694aa7ac6bc2a253628.js" data-main="article/show"></script>
+  <script>require('main')</script>
+  <!--[if lt IE 9]>
+  <script src="/js/html5shiv-3.7.0.min.js"></script>
+  <script src="/js/respond-1.4.2.min.js"></script>
+  <![endif]-->
+        <!--<base target="_blank">--><base href="." target="_blank">
+  <style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body class="" cnzz_category="文章详情" style=""><div id="MathJax_Message" style="display: none;"></div>
+
+      <header>
+  <style>
+    .navbar-nav>li {margin-right: 5px;}
+  </style>
+  <div class="navbar navbar-default">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li><a href="https://www.atatech.org/">首页</a></li>
+        <li><a href="https://www.atatech.org/articles/?sort=yuan">文章</a></li>
+        <li><a href="https://www.atatech.org/teams/">团队博客</a></li>
+        <li><a href="https://www.atatech.org/groups/">圈子</a></li>
+        <li><a href="https://www.atatech.org/ask">问答</a></li>
+                <li><a href="https://www.atatech.org/activity/">活动</a></li>
+        <li><a href="https://www.atatech.org/conference/">会议</a></li>
+        <li class="li-margin"><a href="https://www.atatech.org/specials" target="_blank">专题</a></li>
+        <li class="divider"></li>
+        <li><a href="https://www.atatech.org/paper/">论文专区</a></li>
+        <li><a href="https://www.atatech.org/techtalk/">对话科技</a></li>
+        <li><a href="https://www.atatech.org/news/graduate_train">技术大学</a></li>
+                                                                <li class="divider"></li>
+        <li><a href="https://www.atatech.org/research/">合作</a></li>
+      </ul>
+      <ul class="nav navbar-nav pull-right">
+
+                  <li><a target="_self" href="https://www.atatech.org/edu/mentor/">我的师弟</a></li>
+                                                  <li><a target="_self" href="https://www.atatech.org/notifications/">消息</a></li>
+        <li><a target="_self" href="https://www.atatech.org/feed/">动态</a></li>
+        <li class="divider"></li>
+        <li class="dropdown">
+          <a target="_self" href="https://www.atatech.org/users/180156#information" class="navbar-avatar" data-toggle="dropdown">
+            <img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/107776.80x80.jpg" width="20" height="20" alt="梵昱" class="img-circle">
+            <span>&nbsp;梵昱</span>
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li>
+              <a target="_self" href="https://www.atatech.org/users/180156/own#information">
+                <span class="glyphicon glyphicon-edit"></span>
+                <span>我的文章</span>
+              </a>
+            </li>
+            <li>
+              <a target="_self" href="https://www.atatech.org/activity/new">
+                <span class="glyphicon glyphicon-fire"></span>
+                <span>发起活动</span>
+              </a>
+            </li>
+            <li>
+              <a target="_self" href="https://www.atatech.org/users/180156/ask#information">
+                <span class="glyphicon glyphicon-question-sign"></span>
+                <span>我的问题</span>
+              </a>
+            </li>
+            <li>
+              <a target="_self" href="https://www.atatech.org/users/180156/mark#information">
+                <span class="glyphicon glyphicon-star-empty"></span>
+                <span>我的收藏</span>
+              </a>
+            </li>
+            <li>
+              <a target="_self" href="https://www.atatech.org/users/180156/groups">
+                <span class="glyphicon glyphicon-record"></span>
+                <span>我的圈子</span>
+              </a>
+            </li>
+            <li>
+              <a target="_self" href="https://www.atatech.org/teams">
+                <span class="glyphicon glyphicon-list-alt"></span>
+                <span>我的博客</span>
+              </a>
+            </li>
+
+                        <li>
+              <a target="_self" href="https://www.atatech.org/settings/">
+                <span class="glyphicon glyphicon-cog"></span>
+                <span>个人设置</span>
+              </a>
+            </li>
+                        <li class="divider"></li>
+            <li>
+              <a target="_self" href="https://www.atatech.org/logout" data-method="post">
+                <span class="glyphicon glyphicon-log-out"></span>
+                <span>退出</span>
+              </a>
+            </li>
+          </ul><!-- /.dropdown -->
+        </li>
+        <li class="dropdown quick-search">
+          <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-search"></span></button>
+          <div class="dropdown-menu form-group" role="menu">
+            <form target="_self" action="https://www.atatech.org/search" method="get" class="quick-form js-active-on-valid">
+              <input type="hidden" name="type" value="ALL">
+              <input type="text" name="q" class="form-control" placeholder="全站搜索" required="">
+              <button type="submit" class="quick_btn"></button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  </header>    <div class="container header-notice-container">
+      </div>
+  <style>
+    ._article-container .unsafe {
+      overflow: inherit;
+    }
+    .content table td, .content table th{
+      word-wrap:break-word;
+    }
+    .influential-article{
+      background: url(http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/5536328776615091af700516adbe8319.png);
+      background-size: 200px 200px;
+      width: 200px;
+      height: 200px;
+      position: absolute;
+      right: 174px;
+      top: 127px;
+      z-index: 5000;
+    }
+
+    .article-anchor {float: left;line-height:1.5;margin-left: -20px;padding-right: 4px;position:absolute;}
+    .article-anchor:hover{cursor: pointer;}
+    .article-anchor .ancher-link {visibility:hidden;}
+    .medal {margin-left: -12px; margin-right: 5px;}
+    .medal-show {display: inline-block;position: absolute; background-color: #fe4625;border-radius: 0.25em; line-height: 25px;}
+    .medal-show span {color: #fff;padding: 10px;}
+    .medal-hide {display: none;position: absolute}
+    .medal-show:after {
+      border-color: #f0f0f0 transparent transparent #f0f0f0;
+      border-style: solid solid solid solid;
+      border-width: 6px 3px;
+
+      /* 必須指定，才能顯示內容 */
+      content: '';
+
+      height: 0px;
+      left: 0px;
+
+      /* 必須指定，否則會變梯形 */
+      position: absolute;
+      top: 25px;
+      width: 0px;
+    }
+    .medal-show:before {
+      border-color: #fe4625 transparent transparent #fe4625;
+      border-style: solid solid solid solid;
+      border-width: 6px 10px;
+
+      /* 必須指定，才能顯示內容 */
+      content: '';
+
+      height: 0px;
+      left: 0px;
+
+      /* 必須指定，否則會變梯形 */
+      position: absolute;
+
+      top: 25px;
+      width: 0px;
+    }
+    .pull-right .article-favor, .article-favor, .article-delete {
+      margin-left: 10px;
+    }
+
+    .article-tag {
+      margin-right: 5px;
+      color: #999999;
+    }
+
+    .knowledge-tags a {
+      margin-right: 8px;
+      color: #999999;
+    }
+
+    .knowledge-tags a:hover {
+      color: #428bca;
+      text-decoration: underline;
+    }
+
+    .labels span, .labels a {
+      font-size: 13px;
+    }
+    .labels div span, .labels .knowledge-tags span, .span-weight {
+      font-weight: 700;
+      color: #666;
+    }
+
+    .article-title {
+      text-align: center;
+      border-bottom: #dfdfdf 1px solid;
+      margin-bottom: 10px;
+      padding-bottom: 15px;
+    }
+
+    .special-attr {
+      color: #FF3300;
+      margin-right: 10px;
+      font-weight: 700;
+    }
+
+    .special-yuan {
+      color: #009933 !important;
+    }
+
+  </style>
+  
+    <div class="container">
+    <div class="_article-container">
+      <div class="_article-box" role="main">
+        <article class="_article">
+          <header class="heading">
+            <div class="infos clearfix">
+              <a href="https://www.atatech.org/users/81987" class="info" title="李辉"><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/077754.80x80.jpg" width="32" height="32" alt="李辉" class="img-user"><span>&nbsp;李辉</span></a>                            <span class="info">
+                              <time class="" datetime="2017-08-31T12:49:57+08:00">2017-08-31 12:49:57</time>
+                                  (最初创作于: 2017-08-28 18:44:57)
+                              </span>
+                              <span class="info">发表于：                  <a href="https://www.atatech.org/groups/647">数据那点事儿</a></span>
+                            
+              <div class="pull-right">
+                <span class="info">4759  阅读</span>
+                <span id="tools_favor_top" class="article-favor"></span>
+                
+                              </div>
+            </div>
+
+            
+            <div class="labels">
+  <div class="knowledge-tags">
+    <span class="k-span">知识体系：</span>
+          <a class="ktag" href="https://www.atatech.org/articles/?kid=24" data-kid="24">离线计算</a>
+          <a class="ktag" href="https://www.atatech.org/articles/?kid=25" data-kid="25">流计算</a>
+          <a class="ktag" href="https://www.atatech.org/articles/?kid=37" data-kid="37">机器学习／深度学习</a>
+          <a class="ktag" href="https://www.atatech.org/articles/?kid=46" data-kid="46">算法平台</a>
+          <a class="ktag" href="https://www.atatech.org/articles/?kid=81" data-kid="81">图计算</a>
+          <a class="ktag" href="https://www.atatech.org/articles/?kid=82" data-kid="82">异构计算</a>
+        <button href="/knowledge/knowledgeTags?type=show&amp;aid=89102" class="btn btn-default btn-xs kbutton" data-toggle="modal" data-target="#editKnowledgeTagModal">
+      <span class="glyphicon glyphicon-pencil"></span>
+      修改知识体系
+    </button>
+  </div>
+</div>
+
+  <div class="modal fade" id="editKnowledgeTagModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+
+            <div class="labels">
+    <form target="_self" accept-charset="UTF-8" action="https://www.atatech.org/articles/89102/tags" autocomplete="off" method="post" data-remote="true" data-done="$(this).closest(&#39;.labels&#39;).replaceWith(r);$.alert(&#39;修改成功&#39;, &#39;success&#39;)" style="display:none">
+    <input type="hidden" name="_method" value="put">
+    <div class="form-group">
+      <input type="text" name="tags" class="form-control selectized" value="架构 算法 分布式系统与计算 " tabindex="-1" style="display: none;"><div class="selectize-control form-control multi plugin-remove_button"><div class="selectize-input items not-full has-options has-items"><div data-value="架构" class="item">架构<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div data-value="算法" class="item">算法<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div data-value="分布式系统与计算" class="item">分布式系统与计算<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><input type="text" autocomplete="off" tabindex="" style="width: 4px;"></div><div class="selectize-dropdown form-control multi plugin-remove_button" style="display: none;"><div class="selectize-dropdown-content"><div data-value="Java核心技术" data-selectable="" class="option active">Java核心技术</div><div data-value="Java" data-selectable="" class="option">Java</div><div data-value="前端与交互设计" data-selectable="" class="option">前端与交互设计</div><div data-value="数据存储与数据库" data-selectable="" class="option">数据存储与数据库</div><div data-value="编程语言" data-selectable="" class="option">编程语言</div><div data-value="测试技术" data-selectable="" class="option">测试技术</div></div></div></div>
+    </div>
+    <div class="form-group text-right">
+      <button type="button" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;.labels&#39;).children().toggle()">取消</button>
+      <button type="submit" class="btn btn-primary btn-sm">更新</button>
+    </div>
+  </form>
+  
+  <div>
+    <span>文章标签：</span>
+          <a class="article-tag" href="https://www.atatech.org/search?q=%E6%9E%B6%E6%9E%84&amp;type=INSIDE_ARTICLE_TAG">架构</a>
+          <a class="article-tag" href="https://www.atatech.org/search?q=%E7%AE%97%E6%B3%95&amp;type=INSIDE_ARTICLE_TAG">算法</a>
+          <a class="article-tag" href="https://www.atatech.org/search?q=%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%8E%E8%AE%A1%E7%AE%97&amp;type=INSIDE_ARTICLE_TAG">分布式系统与计算</a>
+              <button type="button" id="edit-tags" class="btn btn-default btn-xs" onclick="$(this).closest(&#39;.labels&#39;).children().toggle()">
+        <span class="glyphicon glyphicon-pencil"></span>
+        修改标签
+      </button>
+      <a href="https://www.atatech.org/articles/89102/tags/history" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-tag-history">
+        <span class="glyphicon glyphicon-time"></span>
+        标签历史
+      </a>
+      </div>
+</div>
+
+                          <div class="labels">
+                <span class="span-weight">附加属性：</span>
+                                  <span class="special-attr">内部资料请勿外传</span>
+                                                  <span class="special-attr special-yuan">作者原创</span>
+                                                  <span class="special-attr">热门推荐</span>
+                                                                                              </div>
+            
+            
+                      </header>
+
+            <div class="article-title">
+              <h1 class="title clearfix unsafe">
+                Structure2Vec: 一种强大的异构网络深度学习和推理的分布式技术平台
+                              </h1>
+            </div>
+
+          <div class="content unsafe md" style="background: rgba(0, 0, 0, 0) url(https://www.atatech.org/public/watermark.png) repeat scroll 0 0">
+                          <span style="font-size: 24px;"><strong>1. 背景</strong></span><br>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;现实社会中的各种行为把整个世界编织成一个庞大而复杂的网络。例如，如图1所示，人们日常的联系和交流行为构成了社交网络，互联网中的网页链接关系构成了万维网，支付宝中的交易行为构成了交易网络和资金网络，人们日常的出行轨迹构成了交通网络，微观世界中的蛋白质交互行为、细胞的运动行为以及电子电路的传导行为同样也构成了美妙而复杂的网络关系。阿里系各场景在过去的十几年里积累了大量的网络结构数据，譬如买家和卖家的交易关系，用户和商品之间的购买收藏关系，供应链商户的上下游关系，用户之间的家庭和社会属性关系，用户和银行卡的资金流入流出关系，用户一段时间的浏览行为或者运动轨迹构成的关系等等。<br>&nbsp; &nbsp; &nbsp; &nbsp;如何从这些复杂的网络中提取有价值的数据，这些网络形成的背后是否存在什么潜在的规律，不同类型的网络之间又是如何互相影响和传导的呢？要回答这些问题，一个强大的网络深度学习和推理平台尤为重要。</p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/d6a7d6bb79130e6c181d6911324b7f7c.png" alt="" width="635" height="417"><br><span style="font-size: 12px;">图1. 现实社会中的复杂网络</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;在传统的机器学习和数据分析工作中，不同的样本之间往往是缺少信息交互的，节点被认为是独立的个体，但实际场景中不同的样本往往具有非常密切的联系，譬如一个套现团伙有组织的为一群买家实施套现欺诈，这背后蕴含着一整套有组织有计划的交易和资金网络关系，把不同节点的交互行为结合起来可以帮助我们更好的识别目标群体以及背后的规律。以前的深度学习技术不能用于诸如图形、网络和动态网络等组合结构数据的表示和特征学习。依靠人工的方法衍生网络特征是一个耗时耗力而收益往往不可控的工作，即使是非常有经验的数据分析工作者也只能枚举其认知范围内的一部分网络特征。此外，实际场景中的网络结构会随着时间推移不断的发生变化，依靠业务经验进行网络攻防显得捉襟见肘。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;为了解决以上问题，蚂蚁金服人工智能团队研发出了一个强大的分布式异构网络深度学习和推理技术平台：Structure2Vec。有了它，我们可以更加容易和高效的解决上述复杂的网络问题。Structure2Vec提供了一种能够同时整合节点特征、边特征、异构网络结构以及网络动态演化特征的深度学习和推理嵌入技术，它不仅可以对网络中的节点和边进行推理，还可以对节点，边，甚至子图进行向量化（Graph-Inference-based Feature Engineering）。Structure2Vec产出的特征向量可以与其他学习方法进行再融合，比如所分类问题、回归问题、生成模型及强化学习。目前Structure2Vec在芝麻信用团队的反套现模型中取得了非常好的效果，较历史最好方法有非常显著的提升。<br><span style="font-size: 24px;"><strong>2. Structure2Vec</strong><strong>原理</strong></span></p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/04fdec1eb0497a9303b0a725851e9965.jpg" alt="" width="635" height="450"><br><span style="font-size: 12px;">图2. Structure2Vec Algorithm</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;如图2所示为Structure2Vec网络推理的一般流程，第一步是根据业务逻辑搭建网络结构；第二步是把网络结构建模为一个Latent Variable Model(LVM，优化方法见图3)，把节点特征、边特征以及网络结构特征映射到一个连续的嵌入空间；第三步是在嵌入空间中进行网络的信息传播，算法支持不同类型的信息传播方式，包括但不限于Mean Field， Loopy Belief Propagation， Double-Loop BP, Damped BP, Tree-Reweightd BP, Generalized BP等等；第四步，整合节点、边或网络结构的嵌入表示来定义业务需要的目标；第五步，求解判别模型、生成模型或者增强学习技术涉及到的优化问题最终获得业务需要的模型。</p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/009438eddb47ed81f4dd2b1d93ac790b.jpg" alt="" width="635" height="423"><br><span style="font-size: 12px;">图3. 把网络结构建模为隐变量模型</span></p>
+<span style="font-size: 24px;"><strong>3. 大规模分布式Structure2Vec的实现</strong></span><br>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/0d9a232eedbe75aead58921663a0147f.png" alt="" width="635" height="329"><br><span style="font-size: 12px;">图4. 分布式Structure2Vec的实现框架</span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;图模型深度学习平台Structure2Vec支持十亿节点、百亿边规模的图模型训练，运行在异构机器学习平台的GPU、CPU集群上，并且对于实际小于百万节点的小规模业务场景，其也支持使用单机模式迅速训练，用户可以根据自己的需要进行随意切换或让系统自动切换。Structure2Vec平台提供了一整套流式解决方案，从用户原始数据检查、到模型训练和导出模型和预测结果会给业务，都可以通过简单配置设置例行运行。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;对于大规模业务场景，图中的点、边以及点和边上的特征是分布式存储在parameter server上，在训练中直接参与矩阵运算。在加载时，所有的worker会分布式加载数据文件并存储在系统里。在模型训练方面，我们在分布式的Structure2Vec算法实现中加入了优化算法来加快训练。以对节点进行预测的场景为例，带label的节点实际只会被他们的N度邻居的embedding值影响到, 所以我们只需要找到每个batch中对label有影响的节点构建训练用的新图来训练即可。在实际实践中，模型训练速度有百倍提升。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;我们支持和将要支持的功能包括：</p>
+<p>（1）异构网络，包括不同类型的节点和多种属性的边，以及整合节点、边以及网络子结构的特征；</p>
+<p>（2）静态网络、动态网络、时序网络以及基于事件驱动的网络；</p>
+<p>（3）对节点、边和网络子结构进行聚类、分类和回归，可以输出模型的预测结果，也可以输出各网络元素的Embedding特征向量；<br><br><span style="font-size: 24px;"><strong>4. 应用CASE举例：买家反套现模型</strong></span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;使用间联交易中经过人工筛选后的闭环和坍缩网络已识别的套现交易对应的买家作为样本，使用交易网络相关节点构成的异构网络通过Structure2Vec进行建模（以下选取PR、KS、AUC、F1等经典的方法旨在进行模型性能侧面评估和比较）。如图5所示，KDD 2016年提出的Node2Vec前50%召回的样本，准确率只能达到60%，且头部召回的样本准确率不超过70%。<strong>在只使用网络结构特征的情况下，Structure2Vec在准确率超过80%的情况下，可以召回75%的坏样本</strong>；在此基础上补充节点特征后，召回率可以提高到99%，且头部召回的样本准确率超过90%。Structure2Vec可以同时整合节点类型和特征，边的类型和特征以及网络结构特征，模型不受限于人工经验，在准确率和召回率上较现有方法均有非常显著的提升，使用了Structure2Vec使算法有了本质区别，让整个问题从不可解到了可解。</p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/0cdd7818f172028ca1eb806dcd061e91.png" alt="" width="635" height="441"><br><span style="font-size: 12px;">图5. 间连商户套现买家的识别效果（闭环和坍缩网络已识别的套现买家）</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 为了进一步验证本文所述技术的有效性，我们在间联商户真实label的样本上使用Structure2Vec进行建模（该样本同时包含业务规则和人工判定的套现打标结果，较上一个样本更加真实），如图6所示，XGBoost在使用71个业务经验定义的特征后，模型KS可以到达53.0%；<strong>而Structure2Vec在不使用任何特征的情况下，KS可以达到47.8%，在此基础上增加71个原始特征后，性能可以增加到63.0%，显著高于现有方法</strong>，说明Structure2Vec在网络推理和学习网络结构特征中具有非常强的优势。把Structure2Vec输出的Embedding作为XGBoost的输入，模型结果较Structure2Vec无明显改善，说明Structure2Vec自身的Inference Scoring模块在现有的网络结构和特征的情况下已经把模型训练到一个比较好的效果，可以直接用于样本打分。</p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/e54918a537e793fe90d9de591e8f5d95.png" alt="" width="635" height="140"><br><span style="font-size: 12px;">图6. 间连商户套现买家的识别效果（业务规则和人工判定的套现买家）</span><strong><br></strong></p>
+<p><span style="font-size: 24px;"><strong>5. 目前应用于：</strong></span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;芝麻信用团队买家反套现模型；<br><br>&nbsp; &nbsp; &nbsp; &nbsp;此外，我们的技术在微贷的企业风险图谱以及交易级套现模型、口碑的推荐系统中正在实施，<strong>我们期待与更多的业务团队进行合作</strong>。<br><br><span style="font-size: 24px;"><strong>6. 如何使用Structure2Vec package：</strong></span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;Structure2Vec平台目前已经与ODPS打通，用户只需要提供如图7所示的三张输入接口表，我们的系统可以自动进行异构网络深度学习和推理，并在ODPS上产出如图8所示的模型打分结果和Embedding的结果。用户可以前往我们的配置平台使用，并按照需要配置自己需要的功能。<br>&nbsp; &nbsp; &nbsp; &nbsp;<strong>我们会持续优化算法和平台，具体业务应用和算法优化请关注后续报道。使用中有任何问题，欢迎联系ken.lh@alibaba-inc.com或进入钉钉群“Structure2Vec用户交流群”进行交流。</strong></p>
+<p>平台调用URL: <a href="http://armor.proxy.taobao.org/structure2vec.jsp">http://armor.proxy.taobao.org/structure2vec.jsp</a><br>使用方法WIKI: <a href="https://lark.alipay.com/structure2vec/user-guide/getting-started">https://lark.alipay.com/structure2vec/user-guide/getting-started</a></p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/fa9b91d3360146c341c8830f1672c8be.png" alt="" width="635" height="359"><br><span style="font-size: 12px;">图7. Structure2Vec的输入接口</span></p>
+<p style="text-align: center;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/abf06c94a39b72db653cd1d27a0986e0.png" alt="" width="635" height="186"><br><span style="font-size: 12px;">图8. Structure2Vec的输出接口</span></p>
+<p><span style="font-size: 18px;">在此向所有参与和支持Structure2Vec的同学和团队致谢（排名不分先后）</span><br>感谢研发团队：百策、皇羲、邦少、乘桴、绿杉、顾枫、李辉<br>感谢漆远、聪云、北海、西亭等各位老大的力挺和支持<br>感谢AI兄弟团队同学的建议和支持：开远、星至、萧川、栩墨、零幺、仁勇等<br>感谢合作伙伴芝麻信用业务团队：玄微、禾素、乾明等<br>感谢合作伙伴大安全业务团队：偌川、符禺等<br>感谢合作伙伴微贷业务团队：钟娙雩、千菁、佐旭等<br>感谢技术导师：Song Le</p>
+<p>&nbsp;Reference:<br>[1] H. Dai, B. Dai and L. Song. Discriminative Embeddings of Latent Variable Models for Structured Data, International Conference on Machine Learning (ICML). 2016.<br>[2] Song, L., Boots, B., Siddiqi, S., Gordon, G., and Smola, A., Hilbert Space Embeddings of Hidden Markov Models, International Conference on Machine Learning (ICML), 2010. <strong>(BEST PAPER)</strong><br>[3] Grover, Aditya, and Jure Leskovec. node2vec: Scalable feature learning for networks. International Conference on Knowledge Discovery and Data mining(KDD). 2016.<br>[4] R Trivedi, H Dai, Y Wang, L Song. Know-Evolve: Deep Temporal Reasoning for Dynamic Knowledge Graph. International Conference on Machine Learning( ICML). 2017.<br>[5] H Dai, Y Wang, R Trivedi, L Song. Deep Coevolutionary Network: Embedding User and Item Features for Recommendation. Recsys Workshop on Deep Learning for Recommendation Systems. 2017.<br>[6] H. Dai, E. Khalil, Y. Zhang, B. Dilkina and L. Song.&nbsp; Learning Combination Optimizations over Graphs. Arxiv: <a href="https://arxiv.org/abs/1704.01665">https://arxiv.org/abs/1704.01665</a>.<br><br>欢迎搜索或扫描下方二维码加入钉钉群“Structure2Vec用户交流群”进行交流<br><br><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/ce245e962d627493006077c3061de303.jpg" alt="" width="496" height="587"><br><br></p>
+                      </div>
+
+          
+          <div class="_article-float hidden-xs" data-fixed="false">
+            <div class="container">
+              <div class="_article-float-inner">
+                <aside class="_article-side">
+    <a href="https://www.atatech.org/articles/89102/follow" class="btn btn-primary btn-block" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).parent().replaceWith(r)">关注</a>
+    <section class="_article-followers">
+    <h6 class="heading text-center">52人关注该文章</h6>
+    <ul class="list-inline">
+      <li><a href="https://www.atatech.org/users/67257" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/065747.80x80.jpg">君之</a></li><li><a href="https://www.atatech.org/users/9240" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/027914.80x80.jpg">樊瑞</a></li><li><a href="https://www.atatech.org/users/74989" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/073985.80x80.jpg">仲祺</a></li><li><a href="https://www.atatech.org/users/75790" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/074857.80x80.jpg">费恩</a></li><li><a href="https://www.atatech.org/users/79815" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/076536.80x80.jpg">望京</a></li><li><a href="https://www.atatech.org/users/156914" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/103892.80x80.jpg">楚生</a></li><li><a href="https://www.atatech.org/users/112746" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/083160.80x80.jpg">点兵</a></li><li><a href="https://www.atatech.org/users/201610" class="trigger_avatar" avatar="https://work.alibaba-inc.com/photo/111255.80x80.jpg">吴尉林</a></li><li><a data-toggle="modal" href="https://www.atatech.org/articles/89102/followers" data-target="#modal-followers" title="查看全部"><div class="img-user img-user-more text-center" style="width:26px;height:26px">...</div></a></li>    </ul>
+  </section>
+</aside>
+              </div>
+            </div>
+          </div>
+
+          <footer class="actions">
+            <a href="https://www.atatech.org/articles/89102#comment" class="btn btn-primary js-scroll-to">评论文章
+                              (21)
+                          </a>
+            <a href="https://www.atatech.org/articles/89102/voteup" title="赞" class="btn btn-default" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).next().addBack().toggle();$(&#39;#voters&#39;).html(r)">
+              <span class="glyphicon glyphicon-thumbs-up"></span>
+              129
+            </a>
+            <a href="https://www.atatech.org/articles/89102/unvoteup" title="取消赞" class="btn btn-primary" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).prev().addBack().toggle();$(&#39;#voters&#39;).html(r)" style="display:none">
+              <span class="glyphicon glyphicon-thumbs-up"></span>
+              130
+            </a>
+                          <button class="btn btn-default" data-toggle="modal" data-target="#modal-share" data-article-id="89102" data-share-count-target="#share-count" title="分享">
+                <span class="glyphicon glyphicon-share"></span>
+                <span id="share-count">0</span>
+              </button>
+            
+            <!-- 分享到内外工作圈 -->
+            <button class="btn btn-default" data-toggle="modal" data-target="#modal-aliwork-share" data-article-id="89102" title="分享到内外工作圈">
+              <span class="glyphicon glyphicon-share-alt"></span>
+            </button>
+
+            <!-- 收藏 -->
+            <span id="tools_favor_footer">
+                  <a data-toggle="modal" href="https://www.atatech.org/articles/89102/mark/" data-target="#my-mark-modal" title="收藏" class="btn btn-default item-tomark" role="button" rel="nofollow" style="display:none">
+                    204&nbsp;<span>收藏</span>
+                  </a>
+                  <a href="https://www.atatech.org/articles/89102/unmark" title="取消收藏" class="btn btn-primary item-tounmark" role="button" rel="nofollow" data-remote="true" data-done="$(this).prev().addBack().toggle()" data-method="post">
+                    205&nbsp;<span>取消收藏</span>
+                  </a>
+                </span>
+          </footer>
+        </article>
+
+        <hr>
+
+
+        <div id="voters" js-load-url="/articles/89102/voters"><div id="voters" class="_article-voters">
+  <h3 class="heading">他们赞过该文章</h3>
+  <ul class="list-inline"><li><a href="https://www.atatech.org/users/1336" class="trigger_avatar" avatar="/users/1336/avatar/?size=50">鲁肃</a></li><li><a href="https://www.atatech.org/users/6010" class="trigger_avatar" avatar="/users/6010/avatar/?size=50">王亚飞</a></li><li><a href="https://www.atatech.org/users/6871" class="trigger_avatar" avatar="/users/6871/avatar/?size=50">谷天</a></li><li><a href="https://www.atatech.org/users/7987" class="trigger_avatar" avatar="/users/7987/avatar/?size=50">文烛</a></li><li><a href="https://www.atatech.org/users/9439" class="trigger_avatar" avatar="/users/9439/avatar/?size=50">西风</a></li><li><a href="https://www.atatech.org/users/11992" class="trigger_avatar" avatar="/users/11992/avatar/?size=50">光斗</a></li><li><a href="https://www.atatech.org/users/12985" class="trigger_avatar" avatar="/users/12985/avatar/?size=50">果老</a></li><li><a href="https://www.atatech.org/users/13553" class="trigger_avatar" avatar="/users/13553/avatar/?size=50">北远</a></li><li><a href="https://www.atatech.org/users/16015" class="trigger_avatar" avatar="/users/16015/avatar/?size=50">尊渊</a></li><li><a href="https://www.atatech.org/users/21598" class="trigger_avatar" avatar="/users/21598/avatar/?size=50">权健</a></li><li><a href="https://www.atatech.org/users/23285" class="trigger_avatar" avatar="/users/23285/avatar/?size=50">起灵</a></li><li><a href="https://www.atatech.org/users/34446" class="trigger_avatar" avatar="/users/34446/avatar/?size=50">钟娙雩</a></li><li><a href="https://www.atatech.org/users/35021" class="trigger_avatar" avatar="/users/35021/avatar/?size=50">羽果</a></li><li><a href="https://www.atatech.org/users/35081" class="trigger_avatar" avatar="/users/35081/avatar/?size=50">月冥</a></li><li><a href="https://www.atatech.org/users/64842" class="trigger_avatar" avatar="/users/64842/avatar/?size=50">无荒</a></li><li><a href="https://www.atatech.org/users/65560" class="trigger_avatar" avatar="/users/65560/avatar/?size=50">荐轩</a></li><li><a href="https://www.atatech.org/users/67644" class="trigger_avatar" avatar="/users/67644/avatar/?size=50">撼林</a></li><li><a href="https://www.atatech.org/users/67672" class="trigger_avatar" avatar="/users/67672/avatar/?size=50">琦洁</a></li><li><a href="https://www.atatech.org/users/69795" class="trigger_avatar" avatar="/users/69795/avatar/?size=50">胡默</a></li><li><a href="https://www.atatech.org/users/70050" class="trigger_avatar" avatar="/users/70050/avatar/?size=50">临在</a></li><li><a href="https://www.atatech.org/users/70155" class="trigger_avatar" avatar="/users/70155/avatar/?size=50">纳池</a></li><li><a href="https://www.atatech.org/users/70566" class="trigger_avatar" avatar="/users/70566/avatar/?size=50">八龙</a></li><li><a href="https://www.atatech.org/users/71274" class="trigger_avatar" avatar="/users/71274/avatar/?size=50">黑屏</a></li><li><a href="https://www.atatech.org/users/71492" class="trigger_avatar" avatar="/users/71492/avatar/?size=50">穆远</a></li><li><a href="https://www.atatech.org/users/71919" class="trigger_avatar" avatar="/users/71919/avatar/?size=50">学而</a></li><li><a href="https://www.atatech.org/users/72132" class="trigger_avatar" avatar="/users/72132/avatar/?size=50">劲鸾</a></li><li><a href="https://www.atatech.org/users/72176" class="trigger_avatar" avatar="/users/72176/avatar/?size=50">亿想</a></li><li><a href="https://www.atatech.org/users/74437" class="trigger_avatar" avatar="/users/74437/avatar/?size=50">拉布</a></li><li><a href="https://www.atatech.org/users/74816" class="trigger_avatar" avatar="/users/74816/avatar/?size=50">承心</a></li><li><a href="https://www.atatech.org/users/75472" class="trigger_avatar" avatar="/users/75472/avatar/?size=50">子步</a></li><li><a href="https://www.atatech.org/users/78048" class="trigger_avatar" avatar="/users/78048/avatar/?size=50">蒲风</a></li><li><a href="https://www.atatech.org/users/78185" class="trigger_avatar" avatar="/users/78185/avatar/?size=50">千菁</a></li><li><a href="https://www.atatech.org/users/79570" class="trigger_avatar" avatar="/users/79570/avatar/?size=50">乾明</a></li><li><a href="https://www.atatech.org/users/79815" class="trigger_avatar" avatar="/users/79815/avatar/?size=50">望京</a></li><li><a href="https://www.atatech.org/users/80279" class="trigger_avatar" avatar="/users/80279/avatar/?size=50">偌川</a></li><li><a href="https://www.atatech.org/users/81385" class="trigger_avatar" avatar="/users/81385/avatar/?size=50">祭酒</a></li><li><a href="https://www.atatech.org/users/81889" class="trigger_avatar" avatar="/users/81889/avatar/?size=50">羽冠</a></li><li><a href="https://www.atatech.org/users/81987" class="trigger_avatar" avatar="/users/81987/avatar/?size=50">李辉</a></li><li><a href="https://www.atatech.org/users/81994" class="trigger_avatar" avatar="/users/81994/avatar/?size=50">涵树</a></li><li><a href="https://www.atatech.org/users/93414" class="trigger_avatar" avatar="/users/93414/avatar/?size=50">天乔</a></li><li><a href="https://www.atatech.org/users/93464" class="trigger_avatar" avatar="/users/93464/avatar/?size=50">静君</a></li><li><a href="https://www.atatech.org/users/95192" class="trigger_avatar" avatar="/users/95192/avatar/?size=50">萧川</a></li><li><a href="https://www.atatech.org/users/100017" class="trigger_avatar" avatar="/users/100017/avatar/?size=50">包峰</a></li><li><a href="https://www.atatech.org/users/100975" class="trigger_avatar" avatar="/users/100975/avatar/?size=50">九丰</a></li><li><a href="https://www.atatech.org/users/101011" class="trigger_avatar" avatar="/users/101011/avatar/?size=50">厚勇</a></li><li><a href="https://www.atatech.org/users/102276" class="trigger_avatar" avatar="/users/102276/avatar/?size=50">葬青</a></li><li><a href="https://www.atatech.org/users/102724" class="trigger_avatar" avatar="/users/102724/avatar/?size=50">逸策</a></li><li><a href="https://www.atatech.org/users/112686" class="trigger_avatar" avatar="/users/112686/avatar/?size=50">田常</a></li><li><a href="https://www.atatech.org/users/112746" class="trigger_avatar" avatar="/users/112746/avatar/?size=50">点兵</a></li><li><a href="https://www.atatech.org/users/113210" class="trigger_avatar" avatar="/users/113210/avatar/?size=50">获麟</a></li><li><a href="https://www.atatech.org/users/114752" class="trigger_avatar" avatar="/users/114752/avatar/?size=50">莫残</a></li><li><a href="https://www.atatech.org/users/116600" class="trigger_avatar" avatar="/users/116600/avatar/?size=50">清骞</a></li><li><a href="https://www.atatech.org/users/118396" class="trigger_avatar" avatar="/users/118396/avatar/?size=50">心观</a></li><li><a href="https://www.atatech.org/users/118846" class="trigger_avatar" avatar="/users/118846/avatar/?size=50">清砚</a></li><li><a href="https://www.atatech.org/users/120038" class="trigger_avatar" avatar="/users/120038/avatar/?size=50">曦澈</a></li><li><a href="https://www.atatech.org/users/121377" class="trigger_avatar" avatar="/users/121377/avatar/?size=50">睿晓</a></li><li><a href="https://www.atatech.org/users/125173" class="trigger_avatar" avatar="/users/125173/avatar/?size=50">聪灵</a></li><li><a href="https://www.atatech.org/users/125631" class="trigger_avatar" avatar="/users/125631/avatar/?size=50">仪征</a></li><li><a href="https://www.atatech.org/users/126271" class="trigger_avatar" avatar="/users/126271/avatar/?size=50">千瞳</a></li><li><a href="https://www.atatech.org/users/128779" class="trigger_avatar" avatar="/users/128779/avatar/?size=50">秀晶</a></li><li><a href="https://www.atatech.org/users/130192" class="trigger_avatar" avatar="/users/130192/avatar/?size=50">欧代</a></li><li><a href="https://www.atatech.org/users/131698" class="trigger_avatar" avatar="/users/131698/avatar/?size=50">瀚廷</a></li><li><a href="https://www.atatech.org/users/134046" class="trigger_avatar" avatar="/users/134046/avatar/?size=50">耘路</a></li><li><a href="https://www.atatech.org/users/144306" class="trigger_avatar" avatar="/users/144306/avatar/?size=50">吕祖</a></li><li><a href="https://www.atatech.org/users/146196" class="trigger_avatar" avatar="/users/146196/avatar/?size=50">玉言</a></li><li><a href="https://www.atatech.org/users/146303" class="trigger_avatar" avatar="/users/146303/avatar/?size=50">吴郎</a></li><li><a href="https://www.atatech.org/users/146325" class="trigger_avatar" avatar="/users/146325/avatar/?size=50">星扬</a></li><li><a href="https://www.atatech.org/users/146795" class="trigger_avatar" avatar="/users/146795/avatar/?size=50">锐盈</a></li><li><a href="https://www.atatech.org/users/149151" class="trigger_avatar" avatar="/users/149151/avatar/?size=50">夏渝</a></li><li><a href="https://www.atatech.org/users/149610" class="trigger_avatar" avatar="/users/149610/avatar/?size=50">玄阙</a></li><li><a href="https://www.atatech.org/users/149617" class="trigger_avatar" avatar="/users/149617/avatar/?size=50">实正</a></li><li><a href="https://www.atatech.org/users/152627" class="trigger_avatar" avatar="/users/152627/avatar/?size=50">淑菡</a></li><li><a href="https://www.atatech.org/users/153012" class="trigger_avatar" avatar="/users/153012/avatar/?size=50">施然</a></li><li><a href="https://www.atatech.org/users/155245" class="trigger_avatar" avatar="/users/155245/avatar/?size=50">佐旭</a></li><li><a href="https://www.atatech.org/users/156214" class="trigger_avatar" avatar="/users/156214/avatar/?size=50">践真</a></li><li><a href="https://www.atatech.org/users/166781" class="trigger_avatar" avatar="/users/166781/avatar/?size=50">慕隆</a></li><li><a href="https://www.atatech.org/users/168721" class="trigger_avatar" avatar="/users/168721/avatar/?size=50">墨通</a></li><li><a href="https://www.atatech.org/users/184787" class="trigger_avatar" avatar="/users/184787/avatar/?size=50">乙划</a></li><li><a href="https://www.atatech.org/users/192012" class="trigger_avatar" avatar="/users/192012/avatar/?size=50">商洛</a></li><li><a href="https://www.atatech.org/users/194226" class="trigger_avatar" avatar="/users/194226/avatar/?size=50">毓鋀</a></li><li><a href="https://www.atatech.org/users/196774" class="trigger_avatar" avatar="/users/196774/avatar/?size=50">玄深</a></li><li><a href="https://www.atatech.org/users/196776" class="trigger_avatar" avatar="/users/196776/avatar/?size=50">栩墨</a></li><li><a href="https://www.atatech.org/users/202678" class="trigger_avatar" avatar="/users/202678/avatar/?size=50">伐竹</a></li><li><a href="https://www.atatech.org/users/202961" class="trigger_avatar" avatar="/users/202961/avatar/?size=50">恺若</a></li><li><a href="https://www.atatech.org/users/207886" class="trigger_avatar" avatar="/users/207886/avatar/?size=50">家牛</a></li><li><a href="https://www.atatech.org/users/208432" class="trigger_avatar" avatar="/users/208432/avatar/?size=50">瑞慈</a></li><li><a href="https://www.atatech.org/users/209903" class="trigger_avatar" avatar="/users/209903/avatar/?size=50">琴莫</a></li><li><a href="https://www.atatech.org/users/211511" class="trigger_avatar" avatar="/users/211511/avatar/?size=50">过鹅</a></li><li><a href="https://www.atatech.org/users/220901" class="trigger_avatar" avatar="/users/220901/avatar/?size=50">壁鸣</a></li><li><a href="https://www.atatech.org/users/221594" class="trigger_avatar" avatar="/users/221594/avatar/?size=50">蜀里</a></li><li><a href="https://www.atatech.org/users/226837" class="trigger_avatar" avatar="/users/226837/avatar/?size=50">初林</a></li><li><a href="https://www.atatech.org/users/226939" class="trigger_avatar" avatar="/users/226939/avatar/?size=50">观妙</a></li><li><a href="https://www.atatech.org/users/228874" class="trigger_avatar" avatar="/users/228874/avatar/?size=50">精丽</a></li><li><a href="https://www.atatech.org/users/228939" class="trigger_avatar" avatar="/users/228939/avatar/?size=50">佳贺</a></li><li><a href="https://www.atatech.org/users/239449" class="trigger_avatar" avatar="/users/239449/avatar/?size=50">全初</a></li><li><a href="https://www.atatech.org/users/241915" class="trigger_avatar" avatar="/users/241915/avatar/?size=50">耘初</a></li><li><a href="https://www.atatech.org/users/250220" class="trigger_avatar" avatar="/users/250220/avatar/?size=50">北海</a></li><li><a href="https://www.atatech.org/users/254519" class="trigger_avatar" avatar="/users/254519/avatar/?size=50">蓝壹</a></li><li><a href="https://www.atatech.org/users/256647" class="trigger_avatar" avatar="/users/256647/avatar/?size=50">仁勇</a></li><li><a href="https://www.atatech.org/users/257857" class="trigger_avatar" avatar="/users/257857/avatar/?size=50">奇致</a></li><li><a href="https://www.atatech.org/users/259046" class="trigger_avatar" avatar="/users/259046/avatar/?size=50">瑞光</a></li><li><a href="https://www.atatech.org/users/259700" class="trigger_avatar" avatar="/users/259700/avatar/?size=50">裕宏</a></li><li><a href="https://www.atatech.org/users/266629" class="trigger_avatar" avatar="/users/266629/avatar/?size=50">信贤</a></li><li><a href="https://www.atatech.org/users/267300" class="trigger_avatar" avatar="/users/267300/avatar/?size=50">绿杉</a></li><li><a href="https://www.atatech.org/users/272809" class="trigger_avatar" avatar="/users/272809/avatar/?size=50">皇羲</a></li><li><a href="https://www.atatech.org/users/274843" class="trigger_avatar" avatar="/users/274843/avatar/?size=50">屹力</a></li><li><a href="https://www.atatech.org/users/277343" class="trigger_avatar" avatar="/users/277343/avatar/?size=50">征辰</a></li><li><a href="https://www.atatech.org/users/283213" class="trigger_avatar" avatar="/users/283213/avatar/?size=50">大椽</a></li><li><a href="https://www.atatech.org/users/283215" class="trigger_avatar" avatar="/users/283215/avatar/?size=50">鑫斌</a></li><li><a href="https://www.atatech.org/users/285746" class="trigger_avatar" avatar="/users/285746/avatar/?size=50">顾枫</a></li><li><a href="https://www.atatech.org/users/286896" class="trigger_avatar" avatar="/users/286896/avatar/?size=50">邦少</a></li><li><a href="https://www.atatech.org/users/292990" class="trigger_avatar" avatar="/users/292990/avatar/?size=50">乘桴</a></li><li><a href="https://www.atatech.org/users/293101" class="trigger_avatar" avatar="/users/293101/avatar/?size=50">艾奥</a></li><li><a href="https://www.atatech.org/users/296029" class="trigger_avatar" avatar="/users/296029/avatar/?size=50">百策</a></li><li><a href="https://www.atatech.org/users/299417" class="trigger_avatar" avatar="/users/299417/avatar/?size=50">云左</a></li><li><a href="https://www.atatech.org/users/299768" class="trigger_avatar" avatar="/users/299768/avatar/?size=50">一七</a></li><li><a href="https://www.atatech.org/users/300541" class="trigger_avatar" avatar="/users/300541/avatar/?size=50">路宸</a></li><li><a href="https://www.atatech.org/users/302151" class="trigger_avatar" avatar="/users/302151/avatar/?size=50">仟里</a></li><li><a href="https://www.atatech.org/users/302968" class="trigger_avatar" avatar="/users/302968/avatar/?size=50">赵津锋</a></li><li><a href="https://www.atatech.org/users/305282" class="trigger_avatar" avatar="/users/305282/avatar/?size=50">潜隐</a></li><li><a href="https://www.atatech.org/users/312011" class="trigger_avatar" avatar="/users/312011/avatar/?size=50">仓禹</a></li><li><a href="https://www.atatech.org/users/318710" class="trigger_avatar" avatar="/users/318710/avatar/?size=50">穰川</a></li><li><a href="https://www.atatech.org/users/323348" class="trigger_avatar" avatar="/users/323348/avatar/?size=50">庆绘</a></li><li><a href="https://www.atatech.org/users/324771" class="trigger_avatar" avatar="/users/324771/avatar/?size=50">廷枫</a></li><li><a href="https://www.atatech.org/users/326226" class="trigger_avatar" avatar="/users/326226/avatar/?size=50">茂午</a></li><li><a href="https://www.atatech.org/users/342554" class="trigger_avatar" avatar="/users/342554/avatar/?size=50">羲农</a></li><li><a href="https://www.atatech.org/users/342587" class="trigger_avatar" avatar="/users/342587/avatar/?size=50">娜芳</a></li><li><a href="https://www.atatech.org/users/380865" class="trigger_avatar" avatar="/users/380865/avatar/?size=50">信征</a></li><li><a href="https://www.atatech.org/users/462590" class="trigger_avatar" avatar="/users/462590/avatar/?size=50">弗措</a></li></ul></div>
+<hr>
+</div>
+
+                <div js-load-url="/articles/89102/similar">  <table width="100%" class="cnzz_block" id="article-recommend" cnzz_event="相似文章">
+    <tbody><tr>
+      <th rowspan="3" width="5%">相<br>似<br>文<br>章</th>
+      <td width="50%">
+        <li><a href="https://www.atatech.org/articles/5745">淘宝中Learning to rank大应用（转）</a></li>
+      </td>
+      <td width="45%">
+        <li><a href="https://www.atatech.org/articles/26786">Deep Match Model——场景...</a></li>
+      </td>
+    </tr>
+          <tr>
+        <td>
+          <li><a href="https://www.atatech.org/articles/54434">基于深度学习的智能问答</a></li>
+        </td>
+        <td>
+          <li><a href="https://www.atatech.org/articles/69507">阿里神经机器翻译</a></li>
+        </td>
+      </tr>
+          <tr>
+        <td>
+          <li><a href="https://www.atatech.org/articles/75062">一种新的语义编码模型及其在智能问答及分类...</a></li>
+        </td>
+        <td>
+          <li><a href="https://www.atatech.org/articles/77214">AliNLP-Sentiment-Ana...</a></li>
+        </td>
+      </tr>
+      </tbody></table>
+</div>
+
+        
+                  <section class="comments-box clearfix">
+            <div class="media-list comments" id="comments" js-load-url="/articles/89102/comments">
+<div class="comment media gaze in" id="comment-141577">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        1F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/71919" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/072174.80x80.jpg">学而</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141577" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-29T08:54:00+08:00">2017-08-29 08:54:00</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>收藏收藏</p>
+
+    </div>
+    
+        <div class="voters voters-p">
+  <span>李辉</span><span>、</span><span>Song, Le</span>    <span>赞同</span>
+  </div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141577/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        2
+      </a>
+      <a href="https://www.atatech.org/comments/141577/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        3
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141577&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141577">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141577" style="display:none">
+      <div class="sub-comments media-list" id="comment-141577-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141577/subcomments/" method="POST" data-remote="true" data-target="#comment-141577-sub" data-done="$(&#39;#sub-comments-count-141577&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141591">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        2F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/209943" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/113305.80x80.jpg">征鸿</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141591" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-29T09:58:58+08:00">2017-08-29 09:58:58</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>介绍清晰，使用方便，赞</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141591/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141591/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141591&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141591">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141591" style="display:none">
+      <div class="sub-comments media-list" id="comment-141591-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141591/subcomments/" method="POST" data-remote="true" data-target="#comment-141591-sub" data-done="$(&#39;#sub-comments-count-141591&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141596">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        3F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/72913" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/072798.80x80.jpg">媄诺</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141596" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-29T10:11:30+08:00">2017-08-29 10:11:30</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>果断收藏</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141596/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141596/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141596&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141596">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141596" style="display:none">
+      <div class="sub-comments media-list" id="comment-141596-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141596/subcomments/" method="POST" data-remote="true" data-target="#comment-141596-sub" data-done="$(&#39;#sub-comments-count-141596&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141597">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        4F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/114752" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/083621.80x80.jpg">莫残</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141597" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-29T10:11:55+08:00">2017-08-29 10:11:55</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>赞</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141597/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141597/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141597&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141597">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141597" style="display:none">
+      <div class="sub-comments media-list" id="comment-141597-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141597/subcomments/" method="POST" data-remote="true" data-target="#comment-141597-sub" data-done="$(&#39;#sub-comments-count-141597&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141622">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        5F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/196776" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/110436.80x80.jpg">栩墨</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141622" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-29T13:53:40+08:00">2017-08-29 13:53:40</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>赞赞赞，欢迎各位感兴趣同学转岗或推荐 加入宋老师团队😀 </p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141622/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141622/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141622&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141622">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141622" style="display:none">
+      <div class="sub-comments media-list" id="comment-141622-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141622/subcomments/" method="POST" data-remote="true" data-target="#comment-141622-sub" data-done="$(&#39;#sub-comments-count-141622&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141632">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        6F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/196776" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/110436.80x80.jpg">栩墨</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141632" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-29T15:59:17+08:00">2017-08-29 15:59:17</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>以下为宋老师团队招聘广告（我们欢迎内部转岗或外部推荐）：</p>
+<p>一. 级别：P6,P7,P8,P9&nbsp;<br>
+二. 职责： 负责蚂蚁全域的图算法及图模型深度学习的整体算法和工程架构，包括算法实现, 开发分布式系统, 对接业务方等.&nbsp;<br>
+三. 背景：如下要求满足其一即可<br>
+&nbsp; &nbsp; &nbsp;1. 有过图算法, 机器学习、深度学习和分布式系统的实战经验，包括大公司内部的系统和平台(如百度搜索、凤巢和网盟的系统，以及Google、Bing、Facebook、Twitter、Linkedin、腾讯广点通、搜狗、360、滴滴、今日头条、美团点评等公司内部的系统)；<br>
+&nbsp; &nbsp; &nbsp;2. 做过搜索、推荐和广告等算法密集业务的后端架构，有过数据驱动创新的经验，如Google、Bing、百度、搜狗、360、京东搜索、微博搜索等方向&nbsp;&nbsp; &nbsp; &nbsp;<br>
+&nbsp; &nbsp; &nbsp;3. 做过大数据智能分析的整体架构，包括数据埋点、收集、存储和分析等，如Google Analytics、百度统计、Mixpanel、TalkingData、GrowingIO、诸葛IO、云测、腾讯WeTest、AppLovin等公司&nbsp;<br>
+四. 基本要求： <br>
+&nbsp; &nbsp; &nbsp; 1. 硕士或博士以上学历，2年工作经验以上。&nbsp;&nbsp; &nbsp; &nbsp;<br>
+&nbsp; &nbsp; &nbsp; 2. 熟练使用c/c++, python, Java 中的至少一种编程语言, 熟悉linux开发环境，有MPI，cuda 底层开发经验优先。&nbsp;&nbsp; &nbsp; &nbsp;<br>
+&nbsp; &nbsp; &nbsp; 3. 熟悉至少一种主流深度学习训练框架（caffe/Theano/Tensorflow/Torch）.&nbsp;&nbsp; &nbsp; &nbsp;<br>
+&nbsp; &nbsp; &nbsp; 4. 有ICML/NIPS/CVPR 等顶尖会议发表者优先. &nbsp;&nbsp;</p>
+
+    </div>
+    
+        <div class="voters voters-p">
+  <span>萧川</span>    <span>赞同</span>
+  </div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141632/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <a href="https://www.atatech.org/comments/141632/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        2
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141632&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141632">1</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141632">
+      <div class="sub-comments media-list" id="comment-141632-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/78169" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/076009.80x80.jpg">本象</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-08-30T13:56:27+08:00">2017-08-30 13:56:27</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p>这个广告位给满分</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/141632/subcomments/45648/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141632/subcomments/45648/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45648&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45648" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/141632/subcomments/" method="POST" data-remote="true" data-target="#comment-141632-sub" data-done="$(&#39;#sub-comments-count-141632&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@本象 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141632/subcomments/" method="POST" data-remote="true" data-target="#comment-141632-sub" data-done="$(&#39;#sub-comments-count-141632&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141696">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        7F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/149102" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/101679.80x80.jpg">晨升</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141696" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-30T09:26:39+08:00">2017-08-30 09:26:39</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>满满收获</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141696/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141696/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141696&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141696">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141696" style="display:none">
+      <div class="sub-comments media-list" id="comment-141696-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141696/subcomments/" method="POST" data-remote="true" data-target="#comment-141696-sub" data-done="$(&#39;#sub-comments-count-141696&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141700">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        8F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/95710" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/079286.80x80.jpg">骨来</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141700" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-30T09:38:33+08:00">2017-08-30 09:38:33</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>广告招聘帖： <a href="https://www.aliway.com/read.php?tid=369851">https://www.aliway.com/read.php?tid=369851</a> 欢迎你加入NewContent新内容团队。</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141700/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141700/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141700&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141700">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141700" style="display:none">
+      <div class="sub-comments media-list" id="comment-141700-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141700/subcomments/" method="POST" data-remote="true" data-target="#comment-141700-sub" data-done="$(&#39;#sub-comments-count-141700&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141722">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        9F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/300541" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/136976.80x80.jpg">路宸</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141722" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-30T10:32:44+08:00">2017-08-30 10:32:44</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>请问F1的阈值是如何确定的？谢谢。</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141722/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141722/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141722&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141722">1</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141722">
+      <div class="sub-comments media-list" id="comment-141722-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-08-30T21:59:09+08:00">2017-08-30 21:59:09</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p><span><a href="https://www.atatech.org/users/300541">@<span></span>路宸</a></span>一般会结合业务目标来设定，不能一概而论，会同时考虑影响范围和模型精度等。</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/141722/subcomments/45676/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141722/subcomments/45676/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45676&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45676" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/141722/subcomments/" method="POST" data-remote="true" data-target="#comment-141722-sub" data-done="$(&#39;#sub-comments-count-141722&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141722/subcomments/" method="POST" data-remote="true" data-target="#comment-141722-sub" data-done="$(&#39;#sub-comments-count-141722&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141740">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        10F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/18376" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/049388.80x80.jpg">醉客</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141740" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-30T13:29:39+08:00">2017-08-30 13:29:39</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>求开课分享</p>
+
+    </div>
+    
+        <div class="voters voters-p">
+  <span>叶舒尘</span>    <span>赞同</span>
+  </div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141740/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <a href="https://www.atatech.org/comments/141740/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        2
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141740&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141740">2</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141740">
+      <div class="sub-comments media-list" id="comment-141740-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/22151" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/056793.80x80.jpg">叶舒尘</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-08-30T15:09:46+08:00">2017-08-30 15:09:46</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p><a href="https://www.atatech.org/users/1890">@<span></span>李辉</a> 可以有吗？邀请老师来讲课</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/141740/subcomments/45652/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141740/subcomments/45652/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45652&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45652" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/141740/subcomments/" method="POST" data-remote="true" data-target="#comment-141740-sub" data-done="$(&#39;#sub-comments-count-141740&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@叶舒尘 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-08-30T16:32:41+08:00">2017-08-30 16:32:41</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p><a href="https://www.atatech.org/users/22151">@<span></span>叶舒尘</a> <a href="https://www.atatech.org/users/18376">@<span></span>醉客</a> 后续根据宋老师的时间，我们会尽快安排Structure2Vec相关的公开课。请关注后续与Structure2Vec相关报道。谢谢！</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/141740/subcomments/45664/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <a href="https://www.atatech.org/comments/141740/subcomments/45664/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        2
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45664&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45664" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/141740/subcomments/" method="POST" data-remote="true" data-target="#comment-141740-sub" data-done="$(&#39;#sub-comments-count-141740&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141740/subcomments/" method="POST" data-remote="true" data-target="#comment-141740-sub" data-done="$(&#39;#sub-comments-count-141740&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141781">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        11F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/113210" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/083308.80x80.jpg">获麟</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141781" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-30T16:05:25+08:00">2017-08-30 16:05:25</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>学习收藏</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141781/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141781/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141781&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141781">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141781" style="display:none">
+      <div class="sub-comments media-list" id="comment-141781-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141781/subcomments/" method="POST" data-remote="true" data-target="#comment-141781-sub" data-done="$(&#39;#sub-comments-count-141781&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-141820">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        12F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/80955" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077009.80x80.jpg">笑鸢</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-141820" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-08-30T21:07:45+08:00">2017-08-30 21:07:45</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>厉害！</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/141820/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/141820/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-141820&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-141820">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-141820" style="display:none">
+      <div class="sub-comments media-list" id="comment-141820-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/141820/subcomments/" method="POST" data-remote="true" data-target="#comment-141820-sub" data-done="$(&#39;#sub-comments-count-141820&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-142015">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        13F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/18358" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/049359.80x80.jpg">剑霸</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-142015" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-09-01T11:44:52+08:00">2017-09-01 11:44:52</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>赞， 对内开放不？</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/142015/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142015/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-142015&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-142015">1</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-142015">
+      <div class="sub-comments media-list" id="comment-142015-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-09-01T19:59:14+08:00">2017-09-01 19:59:14</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p><a href="https://www.atatech.org/users/18358">@<span></span>剑霸</a>  本系统对内开放的，可以参考我们的wiki进行使用。使用中有任何问题，欢迎与我们进行联系。</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/142015/subcomments/45766/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142015/subcomments/45766/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45766&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45766" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/142015/subcomments/" method="POST" data-remote="true" data-target="#comment-142015-sub" data-done="$(&#39;#sub-comments-count-142015&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/142015/subcomments/" method="POST" data-remote="true" data-target="#comment-142015-sub" data-done="$(&#39;#sub-comments-count-142015&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-142019">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        14F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/95192" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/079112.80x80.jpg">萧川</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-142019" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-09-01T12:35:40+08:00">2017-09-01 12:35:40</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>牛</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/142019/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142019/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-142019&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-142019">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-142019" style="display:none">
+      <div class="sub-comments media-list" id="comment-142019-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/142019/subcomments/" method="POST" data-remote="true" data-target="#comment-142019-sub" data-done="$(&#39;#sub-comments-count-142019&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-142024">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        15F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/290313" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/134895.80x80.jpg">培成</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-142024" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-09-01T13:42:24+08:00">2017-09-01 13:42:24</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>很好的工具！赞</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/142024/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142024/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-142024&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-142024">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-142024" style="display:none">
+      <div class="sub-comments media-list" id="comment-142024-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/142024/subcomments/" method="POST" data-remote="true" data-target="#comment-142024-sub" data-done="$(&#39;#sub-comments-count-142024&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-142181">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        16F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/92055" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077305.80x80.jpg">问长</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-142181" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-09-04T14:22:53+08:00">2017-09-04 14:22:53</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>有文章或者更详细的资料吗？</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/142181/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142181/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-142181&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-142181">3</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-142181">
+      <div class="sub-comments media-list" id="comment-142181-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-09-04T17:37:34+08:00">2017-09-04 17:37:34</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p>可以参考Reference或者我们的wiki：<a href="https://lark.alipay.com/structure2vec/user-guide%EF%BC%8C%E8%BF%98%E5%8F%AF%E4%BB%A5%E5%8A%A0%E5%85%A5%E6%88%91%E4%BB%AC%E7%9A%84%E7%94%A8%E6%88%B7%E7%BE%A4%EF%BC%8C%E4%B8%8E%E5%A4%A7%E5%AE%B6%E4%B8%80%E8%B5%B7%E8%AE%A8%E8%AE%BA%E3%80%82">https://lark.alipay.com/structure2vec/user-guide，还可以加入我们的用户群，与大家一起讨论。</a></p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/142181/subcomments/45821/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142181/subcomments/45821/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45821&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45821" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/142181/subcomments/" method="POST" data-remote="true" data-target="#comment-142181-sub" data-done="$(&#39;#sub-comments-count-142181&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/92055" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077305.80x80.jpg">问长</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-09-04T19:12:03+08:00">2017-09-04 19:12:03</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p>有没有更深层次的介绍的，最近在搞NE相关的，想学习一下</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/142181/subcomments/45830/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142181/subcomments/45830/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45830&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45830" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/142181/subcomments/" method="POST" data-remote="true" data-target="#comment-142181-sub" data-done="$(&#39;#sub-comments-count-142181&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@问长 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-09-04T21:34:31+08:00">2017-09-04 21:34:31</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p><a href="https://www.atatech.org/users/92055">@<span></span>问长</a> 可以看Reference里面的几篇论文。</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/142181/subcomments/45834/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/142181/subcomments/45834/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-45834&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-45834" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/142181/subcomments/" method="POST" data-remote="true" data-target="#comment-142181-sub" data-done="$(&#39;#sub-comments-count-142181&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/142181/subcomments/" method="POST" data-remote="true" data-target="#comment-142181-sub" data-done="$(&#39;#sub-comments-count-142181&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-145254">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        17F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/178319" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/107566.80x80.jpg">龙滔</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-145254" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-09-29T13:23:55+08:00">2017-09-29 13:23:55</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>赞，只加结构特征，权值特征，流向特征，都属于链接类特征，个人愚见，是不是可以加些实体特征和行为特征作为辅助，哈哈</p>
+
+    </div>
+    
+        <div class="voters voters-p">
+  <span>叶舒尘</span>    <span>赞同</span>
+  </div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/145254/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <a href="https://www.atatech.org/comments/145254/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        2
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-145254&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-145254">1</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-145254">
+      <div class="sub-comments media-list" id="comment-145254-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-10-10T09:57:47+08:00">2017-10-10 09:57:47</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p>链接类的特征、实体特征、行为特征甚至群体子结构特征都可以整合进来。</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/145254/subcomments/46671/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/145254/subcomments/46671/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-46671&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-46671" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/145254/subcomments/" method="POST" data-remote="true" data-target="#comment-145254-sub" data-done="$(&#39;#sub-comments-count-145254&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/145254/subcomments/" method="POST" data-remote="true" data-target="#comment-145254-sub" data-done="$(&#39;#sub-comments-count-145254&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-145593">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        18F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/115624" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/083928.80x80.jpg">啾可</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-145593" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-10-09T17:14:35+08:00">2017-10-09 17:14:35</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>"对于大规模业务场景....带label的节点实际只会被他们的N度邻居的embedding值影响到, 所以我们只需要找到每个batch中对label有影响的节点构建训练用的新图来训练即可..."</p>
+<p>大规模业务场景想获得精确的N度邻居信息也几乎是不可能的，基本2-3度在热点上就已经爆炸了。请问这个是怎么做的，还是说在大规模业务场景下Structure2Vec实现的是deepwalk？</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/145593/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/145593/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-145593&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-145593">1</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-145593">
+      <div class="sub-comments media-list" id="comment-145593-sub">
+
+<div class="sub-comment media gaze in">
+                    <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/81987" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/077754.80x80.jpg">李辉</a>
+                  <time class="pull-right small js-relative-time" datetime="2017-10-10T09:56:38+08:00">2017-10-10 09:56:38</time>
+    </div>
+
+    <div class="content unsafe md">
+      <p>我们是分布式的设计架构，每一个batch分别查找N介邻居，因此数据规模查查找时间都是可控的。</p>
+
+    </div>
+
+    <div class="actions clearfix">
+      <a href="https://www.atatech.org/comments/145593/subcomments/46670/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/145593/subcomments/46670/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comment-46670&#39;).toggle().find(&#39;textarea&#39;).focusend()"><span class="glyphicon glyphicon-comment"></span></button>
+
+          </div>
+
+    <form target="_self" id="sub-comment-46670" class="js-active-on-valid js-comment-create" style="display:none" action="https://www.atatech.org/comments/145593/subcomments/" method="POST" data-remote="true" data-target="#comment-145593-sub" data-done="$(&#39;#sub-comments-count-145593&#39;).inc();$(this).hide();$.scrollTo($r)">
+      <input type="hidden" name="isCheck" value="1">
+            <div class="form-group">
+        <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" required="">@李辉 </textarea>          
+      </div>
+      <div class="form-group text-right">
+        <button type="reset" class="btn btn-default btn-sm" onclick="$(this.form).hide()">取消</button>
+        <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+      </div>
+    </form>
+  </div><!-- /.media-body -->
+
+  </div>
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/145593/subcomments/" method="POST" data-remote="true" data-target="#comment-145593-sub" data-done="$(&#39;#sub-comments-count-145593&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-147502">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        19F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/251050" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/123445.80x80.jpg">诚立</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-147502" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-10-25T14:56:11+08:00">2017-10-25 14:56:11</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>要不也到github那个awesome-2vec页面登记一下吧</p>
+
+    </div>
+    
+        <div class="voters voters-p">
+  <span>羿之</span><span>、</span><span>潜隐</span>    <span>赞同</span>
+  </div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/147502/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        2
+      </a>
+      <a href="https://www.atatech.org/comments/147502/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        3
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-147502&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-147502">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-147502" style="display:none">
+      <div class="sub-comments media-list" id="comment-147502-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/147502/subcomments/" method="POST" data-remote="true" data-target="#comment-147502-sub" data-done="$(&#39;#sub-comments-count-147502&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+<div class="comment media gaze in" id="comment-147517">
+  <div class="pull-left">
+                      <span style="margin-left: 10px">
+        20F
+    </span>
+      </div>
+  <div class="media-body">
+    <div class="source clearfix">
+      <a href="https://www.atatech.org/users/230980" class="author trigger_avatar" avatar="https://work.alibaba-inc.com/photo/120303.80x80.jpg">庆会</a>
+                        <span class="pull-right small">
+        <a target="_self" href="https://www.atatech.org/articles/89102#comment-147517" class="link"><span class="glyphicon glyphicon-link"></span></a>
+        <time class="js-relative-time" datetime="2017-10-25T16:21:11+08:00">2017-10-25 16:21:11</time>
+      </span>
+    </div>
+
+    <div class="content unsafe md">
+      <p>跟李辉大牛当面谈了一下response模型的各个细节，很佩服，李老师德艺双馨，人才啊！</p>
+
+    </div>
+    
+        <div class="voters-p"></div>
+    
+    
+    <div class="actions clearfix">
+            <a href="https://www.atatech.org/comments/147517/voteup" title="赞" class="btn btn-link btn-sm action" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        0
+      </a>
+      <a href="https://www.atatech.org/comments/147517/unvoteup" title="取消赞" class="btn btn-link btn-sm action active" role="button" rel="nofollow" data-remote="true" data-method="post" data-done="$(this).closest(&#39;.comment&#39;).find(&#39;.voters-p:first&#39;).replaceWith(r);$(this).hide().siblings(&#39;:hidden&#39;).show()" style="display:none">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        1
+      </a>
+      <span class="sep"></span>
+      <button class="btn btn-link btn-sm action" onclick="$(&#39;#sub-comments-box-147517&#39;).toggle()">
+        <span class="glyphicon glyphicon-comment"></span> 
+        <span id="sub-comments-count-147517">0</span>
+      </button>
+            
+          </div><!-- /.media-body -->
+    
+    <div class="sub-comments-box" id="sub-comments-box-147517" style="display:none">
+      <div class="sub-comments media-list" id="comment-147517-sub">
+
+
+  
+
+</div>
+
+
+<form target="_self" action="https://www.atatech.org/comments/147517/subcomments/" method="POST" data-remote="true" data-target="#comment-147517-sub" data-done="$(&#39;#sub-comments-count-147517&#39;).inc()" class="sub-comment-form js-comment-create js-active-on-valid">
+  <input type="hidden" name="isCheck" value="1">
+    <div class="form-group">
+    <textarea name="content" rows="1" class="form-control js-mention js-auto-expand" placeholder="写下你的评论…" onfocus="$(this).closest(&#39;form&#39;).addClass(&#39;active&#39;)" required=""></textarea>
+  </div>
+  <div class="form-group text-right actions">
+    <button type="reset" class="btn btn-default btn-sm" onclick="$(this).closest(&#39;form&#39;).removeClass(&#39;active&#39;)">取消</button>
+    <button type="submit" class="btn btn-primary btn-sm" disabled="">评论</button>
+  </div>
+</form>
+    </div><!-- /.sub-comments-box -->
+  </div>
+
+  </div>
+
+<div class="pages comment-tip">
+                    <ul class="pagination " ata_ajax="1" ata_ajax_form="" ata_ajax_nohist="">
+              <li class="disabled"><span>◀</span></li>
+      
+      
+      <li class="active"><span>1</span></li>
+
+                        <li><a target="_self" href="https://www.atatech.org/articles/89102/comments?p=2">2</a></li>
+              
+              <li><a target="_self" href="https://www.atatech.org/articles/89102/comments?p=2" rel="next">▶</a></li>
+          </ul>
+  
+    
+</div>
+<script>require('comments')</script></div>
+
+            <form target="_self" accept-charset="UTF-8" action="https://www.atatech.org/comments" method="POST" data-remote="true" data-target="#comments" class="js-comment-create js-active-on-valid">
+              <input type="hidden" name="type" value="article">
+              <input type="hidden" name="isCheck" value="1">
+              <input type="hidden" name="pid" value="89102">
+              <div class="form-group">
+                <div class="editor">
+                  <div class="editor-container">
+                    <div class="editor-actions">
+                      <button type="button" class="btn btn-xs editor-action js-editor-fullscreen" data-original-title="全屏">
+                        <span class="glyphicon glyphicon-fullscreen"></span>
+                      </button>
+                      <button type="button" class="btn btn-xs editor-action js-editor-preview" data-original-title="预览">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                      </button>
+                      <button type="button" class="btn btn-xs editor-action js-editor-upload" data-original-title="插入图片">
+                        <span class="glyphicon glyphicon-picture"></span>
+                      </button>
+                    </div><!-- /.editor-actions -->
+                    <textarea name="content" rows="4" class="form-control js-mention js-auto-expand editor-content" id="comment" placeholder="写下你的评论…" required=""></textarea>
+                  </div><!-- /.editor-container -->
+
+                  <div class="editor-preview-container">
+                    <div class="editor-actions">
+                      <button type="button" class="btn btn-xs editor-action js-editor-preview-off" data-original-title="取消预览">
+                        <span class="glyphicon glyphicon-eye-close"></span>
+                      </button>
+                    </div><!-- /.editor-actions -->
+                    <div class="editor-preview content unsafe" data-disable-with="&lt;span class=&quot;text-muted&quot;&gt;loading...&lt;/span&gt;"></div>
+                  </div><!-- /.editor-preview-container -->
+                </div><!-- /.editor  -->
+              </div>
+              <div class="form-group text-right">
+                <button type="submit" class="btn btn-primary" disabled="">评论</button>
+              </div>
+            </form>
+          </section><!-- /.comments -->
+              </div><!-- /._article-box -->
+    </div>
+  </div><!-- /.container -->
+        <footer class="footer" role="contentinfo">
+  <div class="container">
+	  <p class="copyright pull-left">
+	  	© 2018 阿里巴巴集团 版权所有 Copyright© 18 ATA. All rights reserved.
+      <script type="text/javascript">var cnzz_protocol = (("https:" === document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1254194462'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/stat.php%3Fid%3D1254194462%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script><span id="cnzz_stat_icon_1254194462"><a href="http://www.cnzz.com/stat/website.php?web_id=1254194462" target="_blank" title="站长统计"><img border="0" hspace="0" vspace="0" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/pic.gif"></a></span><script src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/stat.php" type="text/javascript"></script><script src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/core.php" charset="utf-8" type="text/javascript"></script></p>
+    <ul class="list-inline pull-right">
+      <li><a href="https://www.atatech.org/articles/67826" target="_blank">ATA社区常见问题汇总</a></li>
+    </ul>
+  </div>
+</footer>
+<script>require('module/global')</script>
+<script>
+  require('module/jquery.lazyload');
+  $('img[data-original]').lazyload({effect: 'fadeIn'});
+</script>
+    <div id="modal-followers" class="modal fade" role="dialog" aria-labelledby="followers" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">关注者</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">分享</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /#modal-share -->  <div id="modal-share" class="modal fade" role="dialog" aria-labelledby="share" aria-hidden="true">
+  <div class="modal-dialog">
+    <form target="_self" action="https://www.atatech.org/articles/#{id}/share" method="POST" data-remote="true" data-done="$(this).closest(&#39;.modal&#39;).modal(&#39;hide&#39;);$(&#39;#share-group-or-team&#39;).selectize({plugins: [&#39;remove_button&#39;]})[0].selectize.clear();$($(this).data(&#39;shareCountTarget&#39;)).inc();$.alert(&#39;分享成功&#39;, &#39;success&#39;)" class="js-active-on-valid" novalidate="">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">分享</h4>
+      </div>
+      <div class="modal-body">
+                                    <div class="form-group">
+            <label for="share-group">分享到我的团队/圈子</label>
+            a
+            <select name="share-group-or-team[]" id="share-group-or-team" class="form-control selectized" autocomplete="off" placeholder="Groups or Teams" required="1" multiple="multiple" tabindex="-1" style="display: none;"></select><div class="selectize-control form-control multi plugin-remove_button"><div class="selectize-input items required not-full has-options"><input type="text" autocomplete="off" tabindex="" placeholder="请选择" required="" style="width: 46px;"></div><div class="selectize-dropdown form-control multi plugin-remove_button" style="display: none;"><div class="selectize-dropdown-content"></div></div></div>
+        </div>
+        <div class="form-group">
+          <label for="share-users">分享给同事</label>
+          <input type="text" name="users" class="form-control js-user-complete" id="share-users" placeholder="Users" required="1">
+        </div>
+        <div class="form-group">
+          <textarea name="content" rows="3" class="form-control" placeholder="羞羞的内容"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary" disabled="">分享</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div><!-- /#modal-share -->
+<script>require('modal-share')</script>
+<script>
+$('#share-group-or-team').selectize({
+    plugins: ['remove_button']
+})[0].selectize.clear();
+</script>
+  <div id="modal-aliwork-share" class="modal fade" role="dialog" aria-labelledby="share" aria-hidden="true">
+  <div class="modal-dialog">
+    <form target="_self" action="https://www.atatech.org/articles/89102/sharetoaliwork" method="POST" data-remote="true" data-done="$(this).closest(&#39;.modal&#39;).modal(&#39;hide&#39;);$(&#39;#share-group-or-team&#39;).selectize({plugins: [&#39;remove_button&#39;]})[0].selectize.clear();$($(this).data(&#39;shareCountTarget&#39;)).inc();$.alert(&#39;分享成功&#39;, &#39;success&#39;)" class="js-active-on-valid" novalidate="">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">分享到内外工作圈</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="share-group">Structure2Vec: 一种强大的异构网络深度学习和推理的分布式技术平台</label>
+          </div>
+          <div class="form-group share-detail">
+            <div class="img-thumb"><img class="share-img" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/077754.80x80.jpg" width="60px" height="60px"></div>
+            <div class="content-brief">1. 背景
+&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;现实社会中的各种行为把整个世界编织成一个庞大而复杂的网络。例如，如图1所示，人们日常的联系和交流行为构成了社交网络，互联网中的网页链</div>
+          </div>
+          <div class="form-group">
+            <textarea name="content" rows="3" class="form-control" placeholder="感谢你的分享！ 想对同学们说点什么？"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary" disabled="">分享</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div><!-- /#modal-share -->
+<script>require('modal-share')</script>
+<script>
+  $(document).ready(function(){
+     var imgSrc = $("._article img").attr("src");
+     if (imgSrc != undefined) {
+       $("#modal-aliwork-share .share-img").prop("src", imgSrc);
+     }
+  });
+</script>
+  <div id="modal-tag-history" class="modal fade" role="dialog" aria-labelledby="tag history" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">标签历史</h4>
+      </div>
+      <div class="modal-body">      
+        <p class="text-muted">Loading...</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /#modal-share -->
+  <div id="modal-article-modify-history" class="modal fade" role="dialog" aria-labelledby="article modify history" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">编辑历史</h4>
+      </div>
+      <div class="modal-body">      
+        <p class="text-muted">Loading...</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /#modal-share -->
+
+  <!-- markModal -->
+  <div class="modal fade" id="my-mark-modal" tabindex="-1" role="dialog" aria-labelledby="myMarkModal" aria-hidden="true"></div>
+
+      <link rel="stylesheet" href="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/video.css">
+    <script src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/bundle.js"></script>
+  
+  <script data-group-id="647" data-user-id="81987">require('module/mention')</script>  <script data-group-id="647" data-user-id="81987">require('module/user-complete')</script>  <script>require('module/tools-favor')</script>
+  <script>require('module/tag-complete')</script>
+  <script>require('module/editor')</script>
+  <script>require('module/mark');</script>
+  <script>require('module/highlight');</script>
+  <script src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/swfobject_modified.js"></script>
+  <script>
+    // 替换文章详情页图片地址避免出现下载
+    $(document).on('click', '._article .content.unsafe a, comments-box.clearfix .content.unsafe a', function(e){
+      var img = $(this).children('img');
+      if(img.attr('src') != $(this).attr('href') || !img.attr('src').match(/[0-9a-z]{32}$/)) {
+        return true;
+      }
+      $(this).attr('href', '/public/imageView?src=' + img.attr('src'));
+      return true;
+    });
+
+    $('.js-video').on('click', function () {
+      if ($('#taobao-online-video').length > 0) {
+        swfobject.registerObject("taobao-online-video");
+      }
+    })
+
+    $(function () {
+      $('body').append('<div id="article-outline"><div style="overflow: hidden;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div></div><style>#article-outline{display:none;min-width:140p;max-width: 200px; max-height: 450px;position:absolute;top:150px;left:-999px;border:1px solid #ccc;box-shadow:5px 5px 2px #ccc;padding: 5px 10px;background-color: #fff;overflow-y: auto;scroll-x: auto;}#article-outline ul{margin:5px 0 5px 0;padding-left:30px;font-size:12px;border-left:1px dotted #ccc;}#article-outline ul:first-child{padding-left:15px;border:none;}#article-outline li{list-style-type:decimal;margin:3px 0;}</style>')
+      var jOutline = $('#article-outline');
+
+      var jContent = $('article .content');
+      var jContentHeight = jContent.height();
+      jOutline.find('.close').on('click', function () {
+        jOutline.hide();
+      })
+
+      updateOutline();
+
+      var top = jOutline.offset().top;
+      scrollOutline();
+      $(window).on('scroll', scrollOutline);
+      function scrollOutline() {
+        var scrollTop = $(document).scrollTop();
+        var maxTop = jContent.offset().top + jContent.height() - jOutline.height();
+        if (scrollTop >= top && scrollTop <= maxTop) {
+          jOutline.css({'position': 'fixed', 'top': 0});
+        }
+        else if (scrollTop < top) {
+          jOutline.css({'position': 'absolute', 'top': '150px'});
+        }
+        else {
+          jOutline.css({'position': 'absolute', 'top': maxTop + 'px'});
+        }
+
+      }
+
+      function updateOutline() {
+        var arrAllHeader = jContent.find("h1,h2,h3,h4,h5,h6");
+        var arrOutline = ['<ul>'];
+        var header, headerText;
+        var id = 0;
+        var level = 0,
+            lastLevel = 1;
+        var levelCount = 0;
+        for (var i = 0, c = arrAllHeader.length; i < c; i++) {
+          header = arrAllHeader[i];
+          headerText = $(header).text();
+
+          header.setAttribute('id', id);
+
+          level = header.tagName.match(/^h(\d)$/i)[1];
+          levelCount = level - lastLevel;
+
+          if (levelCount > 0) {
+            for (var j = 0; j < levelCount; j++) {
+              arrOutline.push('<ul>');
+            }
+          } else if (levelCount < 0) {
+            levelCount *= -1;
+            for (var j = 0; j < levelCount; j++) {
+              arrOutline.push('</ul>');
+            }
+          }
+          ;
+          arrOutline.push('<li>');
+          arrOutline.push('<a target="_self" href="#' + id + '">' + headerText + '</a>');
+          arrOutline.push('</li>');
+          lastLevel = level;
+
+          var html = '<a target="_self" class="article-anchor" href="#'+$(header).prop("id")+'" ><svg class="octicon octicon-link ancher-link" height="16" version="1.1" viewBox="0 0 16 16" width="16">' +
+                     '<path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>'+
+                     '</a>' +
+                     $(header).html();
+          $(header).html(html);
+          id++;
+        }
+        arrOutline.push('</ul>')
+        if (arrOutline.length > 2) {
+          jOutline.append(arrOutline.join(''));
+          jOutline.find('ul').each(function (i, n) {
+            var jThis = $(this);
+            if (jThis.children('li').length === 0) {
+              jThis.replaceWith(jThis.children());
+            }
+          });
+          showOutline();
+        }
+        else {
+          hideOutline();
+        }
+      }
+
+      // 设置锚点
+      $("h1,h2,h3,h4,h5").hover(function(){
+          $(this).find(".ancher-link").css({"visibility": "visible"});
+        }, function(){
+          $(this).find(".ancher-link").css({"visibility": "hidden"});
+      });
+      $("h1 .article-anchor,h2 .article-anchor,h3 .article-anchor,h4 .article-anchor,h5 .article-anchor").hover(function(){
+        $(this).find(".ancher-link").css({"visibility": "visible"});
+      }, function(){
+        $(this).find(".ancher-link").css({"visibility": "hidden"});
+      });
+      function showOutline() {
+        var offset = jContent.offset();
+
+        jOutline.css({
+          left: offset.left + jContent.width() + 10 + 'px',
+        }).show();
+      }
+
+      function hideOutline() {
+        jOutline.hide();
+      }
+    });
+  </script>
+  <script async="" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/mathjax%2F2.7.3%2FMathJax.js"></script>
+  <script type="text/x-mathjax-config;executed=true">
+  MathJax.Hub.Config({
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['\\$','\\$'], ["\\(","\\)"], ['$', '$'] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true,
+      ignoreClass:"title"
+    },
+    TeX: {
+      equationNumbers: { autoNumber: "AMS" }
+    },
+    displayAlign: "center"
+  });
+  </script>
+  <a target="_self" href="https://www.atatech.org/articles/89102#" class="go-top" style="display: block;"><span class="glyphicon glyphicon-arrow-up"></span></a>
+<script>require('module/go-top')</script>  <a href="https://work.alibaba-inc.com/work/group/8401" target="_blank" title="为ATA2.0提供反馈" style="position:fixed;right:0;bottom:0px;" class="hidden-xs">
+  <img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/T17D1tFrVeXXcUfo_w-30-100.png" alt="">
+</a>
+
+                                                                            
+                                                  
+                                                                                                                    
+<script type="text/javascript">
+  // CNZZ事件统计
+    var _czc = _czc || [];
+  $(document).on('click', '.cnzz_block a', function (e) {
+    var me = $(this),
+      parent = me.parents('.cnzz_block');
+    var cnzz_category = $('body').attr('cnzz_category'),
+      cnzz_event = parent.attr('cnzz_event'),
+      cnzz_label = '',
+      cnzz_value = '', // me.attr('href').replace(/^.*\/(\d+?)[^\d]*$/, '$1'),
+      cnzz_nodeid = parent.attr('id') || '';
+
+    _czc.push(["_trackEvent", cnzz_category, cnzz_event, cnzz_label, cnzz_value, cnzz_nodeid]);
+
+    // 给cnzz留点时间, 防止数据丢失
+    var t, target = me.attr('target'), h = me.attr('href');
+    if (!target && $('head base[target]').length == 0 || target == '_self') {
+      if (h) {
+        t = setTimeout(function () {
+          clearTimeout(t);
+          return true;
+        }, 300);
+        return true;
+      }
+    }
+
+    return true;
+  });
+  
+  // 搜索框icon按钮触发
+  $('.form-submit-btn').click(function () {
+    var form = $(this).parents('form');
+    form.find('input').focus();
+    form.submit();
+  });
+
+  // //实习生提醒
+  // $('#intern-sure').click(function () {
+  //   // var cookie_key = 'sfb';
+  //   // $('.safepop_mask,.safepop_wrap').remove();
+  //   // setcookie(cookie_key, 1, getTodaySeconsLeft());
+  //   window.location.href = "/news/";
+  // });
+
+  // 导航 dropdown
+  (function () {
+    var t;
+    $('.dropdown').hover(function () {
+      var that = $(this);
+      that.siblings().find('.dropdown-menu').hide();
+      that.children('.dropdown-menu').show();
+      clearTimeout(t);
+    }, function () {
+      var that = $(this);
+      t = setTimeout(function () {
+        that.children('.dropdown-menu').hide();
+      }, 500)
+    })
+  }());
+</script>
+
+  <style>
+    .atanlprobot-wrap {
+    }
+
+    .atanlprobot-wrap pre {
+      display: block;
+      padding: 9.5px;
+      margin: 0 0 10px;
+      font-size: 12px;
+      line-height: 1.42857143;
+      color: #333;
+      word-break: break-all;
+      word-wrap: break-word;
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .atanlprobot-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .atanlprobot-list li {
+      padding: 5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+      overflow: hidden;
+      border-bottom: #ccc 1px solid;
+    }
+
+    .atanlprobot-list li:last-child {
+      border-bottom: none;
+    }
+
+    .atanlprobot-list li span.tp {
+      display: inline-block;
+      padding: 3px;
+      border-radius: 2px;
+      color: #fff;
+      background-color: #007bff;
+      margin-right: 5px;
+      opacity: .75;
+    }
+
+    .atanlprobot-list li span.tp-activity {
+      color: #fff;
+      background-color: #6610f2;
+    }
+
+    .atanlprobot-list li span.tp-article {
+      color: #fff;
+      background-color: #007bff;
+    }
+
+    .atanlprobot-list li span.tp-ask {
+      color: #fff;
+      background-color: #28a745;
+    }
+
+    .atanlprobot-list li span.tp-conference {
+      color: #fff;
+      background-color: #17a2b8;
+    }
+
+    .atanlprobot-list li span.tp-group {
+      color: #000;
+      background-color: #fd7e14;
+    }
+
+    .atanlprobot-list li span.tp-team {
+      color: #000;
+      background-color: #fd7e14;
+    }
+
+    .atanlprobot-list li span.tp-tool {
+      color: #fff;
+      background-color: #6f42c1;
+    }
+
+    .atanlprobot-list li span.tp-user {
+      color: #000;
+      background-color: #ffc107;
+    }
+
+    .atanlprobot-list li.operator {
+    }
+
+    .atanlprobot-list li.operator h3 {
+      word-wrap: break-word;
+      margin: 10px 0;
+      font-size: 18px;
+      white-space: normal;
+    }
+
+    .robot-parent .chat-text ul li.operator img {
+      max-width: 100%;
+    }
+
+    .atanlprobot-list li.operator h4 {
+      font-size: 14px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .atanlprobot-list li.op-todytopic {
+    }
+
+    .atanlprobot-list li.op-todytopic blockquote {
+      word-wrap: break-word;
+      white-space: normal;
+      font-size: 13px;
+      padding: 10px;
+      color: #888;
+      background-color: #fff;
+      border-radius: 3px;
+    }
+
+    .atanlprobot-list li.op-weekhot {
+      /*text-align: center;*/
+    }
+  </style>
+  <link href="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/robot.css" rel="stylesheet" type="text/css">
+  <div id="robotContainer"><div class="robot-parent ui-draggable" style="left: 1031px;"><div class="robot-modal"><p class="chat-title ui-draggable-handle" style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(34, 167, 240);"><i data-toggle="tooltip" data-placement="top" title="聊天记录" class="J_chat_convert" id="history"><img id="chat-img" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/history1.png"></i><span>艾獭</span><i class="J_hide_robot"><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/close.png" style="width: 20px;"></i></p><div class="chat-main"><div class="chat-panel"><div class="chat-note" style="display: block;"><ul class="noteTemplate"><li class="chat-item other"><span class="triangle"></span><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/robot.png" alt="" class="img-circle chat-avatar"><time class="block fs-12 text-muted">机器人</time><div class="chat-bubble"><div class="note-content chat-text"><h4><a href="https://www.atatech.org/articles/98250">👉 艾獭使用说明</a></h4></div></div></li></ul></div><div class="chat-top"><div class="hot-div"><ul class="noteTemplate"><li class="chat-item other"><span class="triangle"></span><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/robot.png" alt="" class="img-circle chat-avatar"><time class="block fs-12 text-muted">机器人</time><div class="chat-bubble"><div class="chat-text"><div class="title"><i class="fa fa-question-circle-o"></i>热门问题</div><ul class="hot-ul"><li class="J_hot"><a><span>最近的热门文章</span><img class="key-down" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/chat-key.png"></a></li><li class="J_hot"><a><span>人工智能</span><img class="key-down" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/chat-key.png"></a></li><li class="J_hot"><a><span>点赞最多的文章</span><img class="key-down" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/chat-key.png"></a></li><li class="J_hot"><a><span>我关注的圈子的文章</span><img class="key-down" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/chat-key.png"></a></li><li class="J_hot"><a><span>我收藏的文章</span><img class="key-down" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/chat-key.png"></a></li></ul></div></div></li></ul></div></div><ul class="chat-ul"><li class="chat-item other"><span class="triangle"></span><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/robot.png" alt="" class="img-circle chat-avatar"><time class="block fs-12 text-muted">机器人 </time><div class="chat-bubble"><div class="chat-text"><span>亲，我是答疑机器人，需要我为您做点什么~~</span></div></div></li></ul></div><div class="form-group has-feedback"><div class="robot-extend"><a data-toggle="tooltip" id="chatBoxEmoji" data-placement="top" title="" class="history-icon" data-original-title="表情"> <img style="width:17px;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/emoji.png"></a><div class="mod-plugin-smiley" id="chatEmojiPanel"><div class="J_Wrapper"><div class="arrow-bottom"></div><div class="J_Scroller scroller" id="emojiPanel"><ul class="smiley-ul-sqi" id="emojiSqi"><li class="ww-smiley" data-id="[微笑]" style="background-position:0 0"></li><li class="ww-smiley" data-id="[害羞]" style="background-position:0 -25px"></li><li class="ww-smiley" data-id="[吐舌头]" style="background-position:0 -50px"></li><li class="ww-smiley" data-id="[偷笑]" style="background-position:0 -75px"></li><li class="ww-smiley" data-id="[爱慕]" style="background-position:0 -100px"></li><li class="ww-smiley" data-id="[大笑]" style="background-position:0 -125px"></li><li class="ww-smiley" data-id="[跳舞]" style="background-position:0 -150px"></li><li class="ww-smiley" data-id="[飞吻]" style="background-position:0 -175px"></li><li class="ww-smiley" data-id="[安慰]" style="background-position:0 -200px"></li><li class="ww-smiley" data-id="[抱抱]" style="background-position:0 -225px"></li><li class="ww-smiley" data-id="[加油]" style="background-position:0 -250px"></li><li class="ww-smiley" data-id="[胜利]" style="background-position:0 -275px"></li><li class="ww-smiley" data-id="[强]" style="background-position:0 -300px"></li><li class="ww-smiley" data-id="[亲亲]" style="background-position:0 -325px"></li><li class="ww-smiley" data-id="[花痴]" style="background-position:0 -350px"></li><li class="ww-smiley" data-id="[露齿笑]" style="background-position:0 -375px"></li><li class="ww-smiley" data-id="[查找]" style="background-position:0 -400px"></li><li class="ww-smiley" data-id="[呼叫]" style="background-position:0 -425px"></li><li class="ww-smiley" data-id="[算账]" style="background-position:0 -450px"></li><li class="ww-smiley" data-id="[财迷]" style="background-position:0 -475px"></li><li class="ww-smiley" data-id="[好主意]" style="background-position:0 -500px"></li><li class="ww-smiley" data-id="[鬼脸]" style="background-position:0 -525px"></li><li class="ww-smiley" data-id="[天使]" style="background-position:0 -550px"></li><li class="ww-smiley" data-id="[再见]" style="background-position:0 -575px"></li><li class="ww-smiley" data-id="[流口水]" style="background-position:0 -600px"></li><li class="ww-smiley" data-id="[享受]" style="background-position:0 -625px"></li><li class="ww-smiley" data-id="[色情狂]" style="background-position:0 -650px"></li><li class="ww-smiley" data-id="[呆若木鸡]" style="background-position:0 -675px"></li><li class="ww-smiley" data-id="[思考]" style="background-position:0 -700px"></li><li class="ww-smiley" data-id="[迷惑]" style="background-position:0 -725px"></li><li class="ww-smiley" data-id="[疑问]" style="background-position:0 -750px"></li><li class="ww-smiley" data-id="[没钱了]" style="background-position:0 -775px"></li><li class="ww-smiley" data-id="[无聊]" style="background-position:0 -800px"></li><li class="ww-smiley" data-id="[怀疑]" style="background-position:0 -825px"></li><li class="ww-smiley" data-id="[嘘]" style="background-position:0 -850px"></li><li class="ww-smiley" data-id="[小样]" style="background-position:0 -875px"></li><li class="ww-smiley" data-id="[摇头]" style="background-position:0 -900px"></li><li class="ww-smiley" data-id="[感冒]" style="background-position:0 -925px"></li><li class="ww-smiley" data-id="[尴尬]" style="background-position:0 -950px"></li><li class="ww-smiley" data-id="[傻笑]" style="background-position:0 -975px"></li><li class="ww-smiley" data-id="[不会吧]" style="background-position:0 -1000px"></li><li class="ww-smiley" data-id="[无奈]" style="background-position:0 -1025px"></li><li class="ww-smiley" data-id="[流汗]" style="background-position:0 -1050px"></li><li class="ww-smiley" data-id="[凄凉]" style="background-position:0 -1075px"></li><li class="ww-smiley" data-id="[困了]" style="background-position:0 -1100px"></li><li class="ww-smiley" data-id="[晕]" style="background-position:0 -1125px"></li><li class="ww-smiley" data-id="[忧伤]" style="background-position:0 -1150px"></li><li class="ww-smiley" data-id="[委屈]" style="background-position:0 -1175px"></li><li class="ww-smiley" data-id="[悲泣]" style="background-position:0 -1200px"></li><li class="ww-smiley" data-id="[大哭]" style="background-position:0 -1225px"></li><li class="ww-smiley" data-id="[痛哭]" style="background-position:0 -1250px"></li><li class="ww-smiley" data-id="[I服了U]" style="background-position:0 -1275px"></li><li class="ww-smiley" data-id="[对不起]" style="background-position:0 -1300px"></li><li class="ww-smiley" data-id="[再见]" style="background-position:0 -1325px"></li><li class="ww-smiley" data-id="[皱眉]" style="background-position:0 -1350px"></li><li class="ww-smiley" data-id="[好累]" style="background-position:0 -1375px"></li><li class="ww-smiley" data-id="[吐]" style="background-position:0 -1400px"></li><li class="ww-smiley" data-id="[背]" style="background-position:0 -1425px"></li><li class="ww-smiley" data-id="[惊讶]" style="background-position:0 -1450px"></li><li class="ww-smiley" data-id="[惊愕]" style="background-position:0 -1475px"></li><li class="ww-smiley" data-id="[闭嘴]" style="background-position:0 -1500px"></li><li class="ww-smiley" data-id="[欠扁]" style="background-position:0 -1525px"></li><li class="ww-smiley" data-id="[鄙视你]" style="background-position:0 -1550px"></li><li class="ww-smiley" data-id="[大怒]" style="background-position:0 -1575px"></li><li class="ww-smiley" data-id="[生气]" style="background-position:0 -1600px"></li><li class="ww-smiley" data-id="[财神]" style="background-position:0 -1625px"></li><li class="ww-smiley" data-id="[学习雷锋]" style="background-position:0 -1650px"></li><li class="ww-smiley" data-id="[恭喜发财]" style="background-position:0 -1675px"></li><li class="ww-smiley" data-id="[小二]" style="background-position:0 -1700px"></li><li class="ww-smiley" data-id="[老大]" style="background-position:0 -1725px"></li><li class="ww-smiley" data-id="[邪恶]" style="background-position:0 -1750px"></li><li class="ww-smiley" data-id="[单挑]" style="background-position:0 -1775px"></li><li class="ww-smiley" data-id="[CS]" style="background-position:0 -1800px"></li><li class="ww-smiley" data-id="[隐形人]" style="background-position:0 -1825px"></li><li class="ww-smiley" data-id="[炸弹]" style="background-position:0 -1850px"></li><li class="ww-smiley" data-id="[惊声尖叫]" style="background-position:0 -1875px"></li><li class="ww-smiley" data-id="[漂亮MM]" style="background-position:0 -1900px"></li><li class="ww-smiley" data-id="[帅哥]" style="background-position:0 -1925px"></li><li class="ww-smiley" data-id="[招财猫]" style="background-position:0 -1950px"></li><li class="ww-smiley" data-id="[成交]" style="background-position:0 -1975px"></li><li class="ww-smiley" data-id="[鼓掌]" style="background-position:0 -2000px"></li><li class="ww-smiley" data-id="[握手]" style="background-position:0 -2025px"></li><li class="ww-smiley" data-id="[红唇]" style="background-position:0 -2050px"></li><li class="ww-smiley" data-id="[玫瑰]" style="background-position:0 -2075px"></li><li class="ww-smiley" data-id="[残花]" style="background-position:0 -2100px"></li><li class="ww-smiley" data-id="[爱心]" style="background-position:0 -2125px"></li><li class="ww-smiley" data-id="[心碎]" style="background-position:0 -2150px"></li><li class="ww-smiley" data-id="[钱]" style="background-position:0 -2175px"></li><li class="ww-smiley" data-id="[购物]" style="background-position:0 -2200px"></li><li class="ww-smiley" data-id="[礼物]" style="background-position:0 -2225px"></li><li class="ww-smiley" data-id="[收邮件]" style="background-position:0 -2250px"></li><li class="ww-smiley" data-id="[电话]" style="background-position:0 -2275px"></li><li class="ww-smiley" data-id="[举杯庆祝]" style="background-position:0 -2300px"></li><li class="ww-smiley" data-id="[时钟]" style="background-position:0 -2325px"></li><li class="ww-smiley" data-id="[等待]" style="background-position:0 -2350px"></li><li class="ww-smiley" data-id="[很晚了]" style="background-position:0 -2375px"></li><li class="ww-smiley" data-id="[飞机]" style="background-position:0 -2400px"></li><li class="ww-smiley" data-id="[支付宝]" style="background-position:0 -2425px"></li></ul></div></div></div><a data-toggle="tooltip" data-placement="top" title="" class="history-icon screenShot-button" data-original-title="一键截屏"> <img style="width:17px;" src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/photo1.png"></a></div><div class="input-group" style="margin:0px 0px 10px 0px;"><input type="textarea" id="chatInput" style="width:90%;border-color:rgba(120,130,140,0);margin: 10px 15px;" title="请您描述遇到的问题" placeholder="请描述遇到的问题，command+v可粘贴图片"><a class="over-link" style="display: none;">结束人工服务</a></div></div><a class="sendDingding" style="display: none;">催他一下</a></div><div class="chat-history"><div class="chat-history-left"><ul id="sqiChatDateUl"></ul></div><div class="left-history-control history-mini-right"><span></span></div><div class="chat-history-right"><ul class="chat-ul" id="sqiChatHistoryUl"></ul></div></div></div></div><a data-toggle="tooltip" data-placement="left" title="" id="sqi_robot" style="top: 200px; right: 0px; width: 80px; background: none;" data-original-title="艾獭"><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/icon_robot.png"><span class="robot-info" style="display: none;">0</span></a><div id="userChatHistoryModal" tabindex="-1" role="dialog"><div class="modal-dialog" style="width:830px;"><div class="modal-content"><div class="modal-header" style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(34, 167, 240);"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><i><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/close.png" style="width: 20px;"></i></button></div><div class="modal-body" style="text-align:center"><img id="imgLarge"></div></div></div></div><div id="screenShotModal" tabindex="-1" role="dialog"><div class="modal-dialog" style="width:830px;"><div class="modal-content"><div class="modal-header" style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(34, 167, 240);"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><i><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/close.png" style="width: 20px;"></i></button></div><div class="modal-body screen-body" style="text-align:center"><div style=" text-align: right;padding: 10px 10px 0px 0px;"><div class="pen-wrapper"><button id="rovoked" class="pen-btn rovoked-btn"><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/revoked.png">撤销</button><button id="pencil" class="pen-btn pencil-btn active-btn"><img src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/pencil.png">画笔</button></div></div><div class="canvas"></div></div><div class="modal-footer" style="text-align:center"><button type="button" id="sendScreenImg" style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(34, 167, 240);">发送截屏</button></div></div></div></div></div>
+  <script src="./Structure2Vec_ 一种强大的异构网络深度学习和推理的分布式技术平台_files/sqiRobot.js" type="text/javascript"></script>
+  <script>
+    $(function () {
+      $('#robotContainer').sqiRobot({
+        defineTitle: '艾獭',
+//            bucId: user.bucId, // 当前用户bucId
+        userNick: '梵昱', // 当前用户花名
+        userCode: '107776',  // 当前用户工号
+        productType: 'ata',
+        chatBu: 'NOTSQI',  // 所属bu， 如果是非SQI应用，这里填 "NOTSQI"
+        robotStyle: 'top:200px;right:0;width:80px', // 机器人图表的位置等自定义的style
+        audio: false,
+        appKey: "8a1afcb2-e97f-4ffa-bfc4-6c24440fa54f",
+//            hostName: "pre.one-voice-platform.alibaba-inc.com",
+                        draggable: true,
+        markdown: false,
+        customer: false
+      });
+    });
+  </script>
+
+
+
+<div class="alert-container"></div><div id="article-outline" style="display: none; position: fixed; top: 0px;"><div style="overflow: hidden;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div></div><style>#article-outline{display:none;min-width:140p;max-width: 200px; max-height: 450px;position:absolute;top:150px;left:-999px;border:1px solid #ccc;box-shadow:5px 5px 2px #ccc;padding: 5px 10px;background-color: #fff;overflow-y: auto;scroll-x: auto;}#article-outline ul{margin:5px 0 5px 0;padding-left:30px;font-size:12px;border-left:1px dotted #ccc;}#article-outline ul:first-child{padding-left:15px;border:none;}#article-outline li{list-style-type:decimal;margin:3px 0;}</style></body></html>
